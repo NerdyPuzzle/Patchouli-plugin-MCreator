@@ -1,0 +1,516 @@
+/* sidebar fields, dropdowns and popups */
+
+/* heading and sections */
+
+.ins-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin: 2px 0 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ins-hint {
+    opacity: .6;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+details.sec {
+    border: 1px solid var(--border);
+    border-radius: 0;
+    margin-bottom: 8px;
+    background: var(--bg);
+    max-width: 100%;
+}
+
+details.sec > summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    list-style: none;
+}
+
+/* use our own arrow instead of the browser's */
+details.sec > summary::-webkit-details-marker {
+    display: none;
+}
+
+details.sec > summary::marker {
+    display: none;
+    content: "";
+}
+
+details.sec > summary::before {
+    box-sizing: border-box;
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    opacity: 0.65;
+    flex-shrink: 0;
+    margin-right: 2px;
+    transition: transform 0.15s ease;
+}
+
+details.sec[open] > summary::before {
+    transform: rotate(45deg);
+    margin-top: -2px;
+}
+
+details.sec > .sec-body {
+    padding: 6px 8px 8px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* labels and inputs */
+
+.fld {
+    margin-bottom: 7px;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.fld > label {
+    display: block;
+    opacity: .75;
+    font-size: 11px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* same input style across the editor */
+.fld input[type=text],
+.fld input[type=number],
+.fld select,
+.fld textarea,
+#itemModalInput,
+.macro-row input,
+.colorrow input[type=text],
+.itemfield input {
+    width: 100%;
+    max-width: 100%;
+    padding: 3px 5px;
+    background: var(--bg2);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    font: inherit;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* leave room for the dropdown arrow */
+.fld select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1 L5 5 L9 1' fill='none' stroke='%23888888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 8px 5px;
+    padding-right: 22px;
+    cursor: pointer;
+}
+
+/* highlight the input being used */
+.fld input[type=text]:focus,
+.fld input[type=number]:focus,
+.fld select:focus,
+.fld textarea:focus,
+#itemModalInput:focus,
+.macro-row input:focus,
+.colorrow input[type=text]:focus,
+.itemfield input:focus,
+.mb-pal input:focus,
+#argInput:focus {
+    outline: none;
+    border-color: var(--accent) !important;
+}
+
+.fld select option {
+    background: var(--bg2);
+    color: var(--fg);
+}
+
+/* use the book font here too */
+.fld textarea {
+    min-height: 60px;
+    resize: vertical;
+    font-family: var(--book-font, "Guidebook Uniform", sans-serif);
+    font-kerning: none;
+    font-variant-ligatures: none;
+}
+
+/* put checkbox labels beside the box */
+.fld.check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fld.check label {
+    margin: 0;
+    opacity: 1;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* searchable dropdowns */
+
+/* dropdown button and label */
+.csel {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+
+.csel-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 3px 6px;
+    background: var(--bg2);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    min-height: 24px;
+    user-select: none;
+}
+
+.csel-box:hover,
+.csel-box.open {
+    border-color: var(--accent);
+}
+
+.csel-box:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.csel-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.csel-arrow {
+    flex: 0 0 auto;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    opacity: 0.65;
+    margin-right: 3px;
+    margin-top: -2px;
+    transition: opacity 0.15s ease;
+}
+
+.csel-box:hover .csel-arrow,
+.csel-box:focus .csel-arrow,
+.csel-box.open .csel-arrow {
+    opacity: 0.95;
+}
+
+/* let the dropdown extend outside the sidebar */
+.csel-popup {
+    position: fixed;
+    z-index: 1000;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font: 12px "Segoe UI", Arial, sans-serif;
+}
+
+/* keep search above the scrolling list */
+.csel-search-wrap {
+    padding: 4px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    flex: 0 0 auto;
+}
+
+.csel-search-input {
+    width: 100%;
+    padding: 3px 6px;
+    background: var(--bg2);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font: inherit;
+    font-size: 11px;
+    outline: none;
+}
+
+.csel-search-input:focus {
+    border-color: var(--accent);
+}
+
+/* options */
+.csel-opts {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 3px;
+    max-height: 180px;
+}
+
+.csel-opt {
+    padding: 3px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-bottom: 1px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.csel-opt:last-child {
+    margin-bottom: 0;
+}
+
+.csel-opt:hover,
+.csel-opt.active {
+    background: var(--accent);
+    color: #000;
+}
+
+.csel-opt.selected {
+    background: var(--accent);
+    color: #000;
+    font-weight: 600;
+}
+
+/* texture thumbnails */
+.csel-preview {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    background: rgba(128,128,128,.15);
+}
+
+.csel-opt.has-preview {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.image-row > .csel {
+    min-width: 0;
+}
+
+.csel-empty {
+    padding: 8px 6px;
+    font-size: 11px;
+    opacity: 0.6;
+    font-style: italic;
+    text-align: center;
+}
+
+/* rows and grouped inputs */
+
+.row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.row.end {
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.row > * {
+    flex: 1 1 auto;
+}
+
+/* don't stretch buttons or noflex items */
+.row > .btn,
+.row > .noflex {
+    flex: 0 0 auto;
+}
+
+/* color picker beside the text value */
+.colorrow {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.colorrow input[type=color] {
+    width: 28px;
+    height: 22px;
+    padding: 0;
+    border: 1px solid var(--border);
+    background: none;
+}
+
+/* split the space between macro inputs */
+.macro-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.macro-row input {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* item slots */
+
+.islot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #373737;
+    background: #8b8b8b;
+    border-top-color: #373737;
+    border-left-color: #373737;
+    border-bottom-color: #fff;
+    border-right-color: #fff;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.islot .ico {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: bold 7px/1 monospace;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    text-transform: uppercase;
+}
+
+.islot.empty .ico {
+    background: transparent;
+}
+
+.islot.big {
+    width: 22px;
+    height: 22px;
+}
+
+.islot:hover {
+    outline: 1px solid var(--accent);
+}
+
+/* item icon beside its ID */
+.itemfield {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.itemfield input {
+    flex: 1 1 auto;
+}
+
+/* popup menu */
+
+#popup {
+    position: fixed;
+    z-index: 50;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px;
+    min-width: 190px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.5);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#popup .pi {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-bottom: 1px;
+}
+
+#popup .pi:last-child {
+    margin-bottom: 0;
+}
+
+#popup .pi:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+/* dialogs */
+
+/* dim the background and center the dialog */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    width: 360px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* extra room for the multiblock designer */
+.modal-box.wide {
+    width: min(900px, 94vw);
+    height: min(620px, 90vh);
+}
+
+/* keep the heading above the scrolling content */
+.modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 10px;
+    overflow: auto;
+    flex: 1 1 auto;
+}

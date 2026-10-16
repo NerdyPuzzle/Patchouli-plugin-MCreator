@@ -1,0 +1,34 @@
+templates:
+  - template: guidebook/book.json.ftl
+    writer: json
+    name: "@MODDATAROOT/patchouli_books/@registryname/book.json"
+
+  - template: guidebook/book_recipe.json.ftl
+    writer: json
+    name: "@MODDATAROOT/recipe/@registryname_recipe.json"
+    condition: hasRecipe()
+
+  - template: guidebook/grant_advancement.json.ftl
+    writer: json
+    name: "@MODDATAROOT/advancement/grant_@registryname_on_first_join.json"
+    condition: giveOnFirstJoin
+
+  - template: guidebook/grant_loot_table.json.ftl
+    writer: json
+    name: "@MODDATAROOT/loot_table/grant_@registryname_on_first_join.json"
+    condition: giveOnFirstJoin
+
+list_templates:
+  - name: "Categories"
+    listData: data.getCategories()
+    forEach:
+      - template: guidebook/category.json.ftl
+        writer: json
+        name: "@MODASSETSROOT/patchouli_books/@registryname/en_us/categories/@[item.id].json"
+
+  - name: "Entries"
+    listData: data.getEntries()
+    forEach:
+      - template: guidebook/entry.json.ftl
+        writer: json
+        name: "@MODASSETSROOT/patchouli_books/@registryname/en_us/entries/@[item.id].json"

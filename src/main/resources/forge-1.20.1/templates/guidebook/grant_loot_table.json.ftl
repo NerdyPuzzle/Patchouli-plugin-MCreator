@@ -1,0 +1,22 @@
+<#-- @formatter:off -->
+{
+  "type": "minecraft:advancement_reward",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "patchouli:guide_book",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{\"patchouli:book\":\"${modid}:${registryname}\"}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+<#-- @formatter:on -->

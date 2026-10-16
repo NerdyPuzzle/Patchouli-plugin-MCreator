@@ -1,0 +1,395 @@
+/* main layout and shared controls */
+
+/* theme and defaults */
+
+:root {
+    /* use MCreator current theme colors, or these defaults */
+    --bg: var(--backgroundColor, #2b2b2b);
+    --bg2: var(--altBackgroundColor, var(--secondBackgroundColor, #333436));
+    --fg: var(--foregroundColor, #d6d6d6);
+    --accent: var(--interfaceAccentColor, var(--mainTintColor, #5ec1ff));
+    --border: var(--secondBackgroundColor, rgba(128, 128, 128, 0.35));
+    --danger: #c0504d;
+}
+
+* {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.4) transparent;
+    accent-color: var(--accent);
+}
+
+::selection {
+    background: var(--accent);
+    color: #000;
+}
+
+/* scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.35);
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(160, 160, 160, 0.55);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--accent);
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font: 12px "Segoe UI", Arial, sans-serif;
+    user-select: none;
+    accent-color: var(--accent);
+}
+
+input,
+textarea,
+select {
+    user-select: text;
+    accent-color: var(--accent);
+}
+
+/* shared controls */
+
+/* checkboxes and radio buttons */
+input[type=checkbox],
+input[type=radio] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+    margin: 0;
+    padding: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    outline: none;
+    position: relative;
+    flex: 0 0 14px;
+}
+
+input[type=checkbox] {
+    border-radius: 0;
+}
+
+input[type=radio] {
+    border-radius: 50%;
+}
+
+input[type=checkbox]:hover,
+input[type=radio]:hover {
+    border-color: var(--accent);
+}
+
+input[type=checkbox]:focus-visible,
+input[type=radio]:focus-visible {
+    outline: 1px solid var(--accent);
+    border-color: var(--accent);
+}
+
+input[type=checkbox]:checked,
+input[type=radio]:checked {
+    background-color: var(--bg2);
+    border-color: var(--border);
+}
+
+input[type=checkbox]:checked:hover,
+input[type=radio]:checked:hover {
+    border-color: var(--accent);
+}
+
+/* draw the checkmark */
+input[type=checkbox]:checked::after {
+    content: "";
+    display: block;
+    width: 3.5px;
+    height: 7px;
+    border: solid var(--fg);
+    border-width: 0 1.8px 1.8px 0;
+    transform: rotate(45deg);
+    margin-top: -1.5px;
+}
+
+input[type=checkbox]:disabled,
+input[type=radio]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+input[type=radio]:checked::after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: var(--fg);
+    border-radius: 50%;
+}
+
+/* color picker and swatches */
+input[type=color] {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    cursor: pointer;
+}
+
+input[type=color]:hover {
+    border-color: var(--border-hover);
+}
+
+input[type=color]:focus,
+input[type=color]:focus-visible {
+    outline: none;
+    border-color: var(--border-focus);
+}
+
+input[type=color]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type=color]::-webkit-color-swatch {
+    border: none;
+    border-radius: 0;
+}
+
+input[type=color]::-moz-color-swatch {
+    border: none;
+    border-radius: 0;
+}
+
+/* buttons */
+.btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn:hover {
+    border-color: var(--accent);
+}
+
+.btn.primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+}
+
+.btn.danger {
+    color: #fff;
+    background: var(--danger);
+    border-color: var(--danger);
+}
+
+.btn.small {
+    padding: 2px 6px;
+    font-size: 11px;
+}
+
+/* app layout */
+
+/* hide it regardless of its usual display style */
+.hidden {
+    display: none !important;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* toolbar and breadcrumb */
+
+#topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 8px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    min-height: 36px;
+}
+
+#breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+}
+
+#breadcrumb .crumb {
+    padding: 3px 8px;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+#breadcrumb .crumb:hover {
+    background: rgba(128,128,128,.25);
+}
+
+#breadcrumb .crumb.current {
+    font-weight: 600;
+    cursor: default;
+    background: rgba(128,128,128,.18);
+}
+
+#breadcrumb .sep {
+    opacity: .5;
+}
+
+/* enable formatting while editing text */
+#formatbar {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: .35;
+    pointer-events: none;
+}
+
+#formatbar.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#formatbar .fb {
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+#formatbar .fb:hover {
+    border-color: var(--accent);
+}
+
+#formatbar .swatch {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #000;
+    cursor: pointer;
+    padding: 0;
+}
+
+#formatbar .split {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    margin: 0 3px;
+}
+
+/* show which text styles are on */
+#formatbar .fb.on {
+    background: var(--accent);
+    color: #000;
+}
+
+#formatbar .fb.b {
+    font-weight: bold;
+}
+
+#formatbar .fb.i {
+    font-style: italic;
+}
+
+#formatbar .fb.u {
+    text-decoration: underline;
+}
+
+#formatbar .fb.s {
+    text-decoration: line-through;
+}
+
+/* extra input for codes that need a value */
+#argBox {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    margin-left: 6px;
+}
+
+#argBox.hidden {
+    display: none;
+}
+
+#argInput {
+    width: 230px;
+    padding: 3px 5px;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--accent);
+    border-radius: 0;
+}
+
+/* workspace */
+
+#workspace {
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+}
+
+#stage {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.015), rgba(0,0,0,.25));
+}
+
+#inspector {
+    flex: 0 0 290px;
+    width: 290px;
+    max-width: 290px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-left: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 8px;
+}

@@ -1,0 +1,1040 @@
+/* book fonts */
+
+@font-face {
+    font-family: "Guidebook Uniform";
+    src: url("../fonts/guidebook-uniform.woff") format("woff");
+    font-display: block;
+    unicode-range: U+0-FFFF;
+}
+
+@font-face {
+    font-family: "Guidebook Uniform";
+    src: url("../fonts/guidebook-uniform-upper.woff") format("woff");
+    font-display: block;
+    unicode-range: U+10000-10FFFF;
+}
+
+@font-face {
+    font-family: "Guidebook Minecraft";
+    src: url("../fonts/guidebook-minecraft.woff") format("woff");
+    font-display: block;
+}
+
+@font-face {
+    font-family: "Guidebook Minecraft Controls";
+    src: url("../fonts/guidebook-minecraft.woff") format("woff");
+    font-display: block;
+    ascent-override: 90%;
+    descent-override: 0%;
+    line-gap-override: 0%;
+}
+
+/* book texture and pages */
+
+#bookHost {
+    flex: 0 0 auto;
+}
+
+.book {
+    --book-texture: url("../../themes/default_dark/images/patchouli/book_brown.png");
+    position: relative;
+    width: 272px;
+    height: 180px;
+    image-rendering: pixelated;
+    background: var(--book-texture) left top / 512px 256px no-repeat;
+    background-origin: border-box;
+    background-clip: border-box;
+    border: 4px solid transparent;
+    margin: 14px;
+}
+
+.book .page {
+    position: absolute;
+    top: 11px;
+    width: 116px;
+    height: 153px;
+    color: #000;
+    font: var(--book-font-size, 9px)/var(--book-font-size, 9px) var(--book-font);
+    font-kerning: none;
+    font-variant-ligatures: none;
+}
+
+.book .page.left {
+    left: 11px;
+}
+
+.book .page.right {
+    left: 138px;
+}
+
+.page > .pg-box {
+    position: absolute;
+    inset: 0;
+}
+
+/* page titles and text */
+
+/* title and line underneath */
+.pt-header {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 116px;
+    text-align: center;
+    font-family: "Guidebook Minecraft", "Guidebook Uniform", sans-serif;
+    font-size: calc(var(--book-title-font-size, 7px) + 1px);
+    line-height: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: text;
+}
+
+.pt-sep {
+    position: absolute;
+    left: 3px;
+    top: 12px;
+    width: 110px;
+    height: 3px;
+    pointer-events: none;
+    background: var(--book-texture) -140px -180px / 512px 256px no-repeat;
+    opacity: .8;
+    image-rendering: pixelated;
+}
+
+/* nudge titles to match each page type */
+.text-page:not(.entry-title-page) .pt-header {
+    top: 2px;
+}
+
+.link-page .pt-header {
+    top: 2px;
+}
+
+.spotlight-page .pt-header,
+.spotlight-page > .pt-ghost {
+    top: 2px;
+}
+
+.relations-page .pt-header,
+.quest-page .pt-header {
+    top: 2px;
+}
+
+.relations-page .pt-sep,
+.quest-page .pt-sep {
+    top: 15px;
+}
+
+.quest-page .quest-turnin-separator {
+    top: 134px;
+}
+
+.text-page:not(.entry-title-page) .pt-sep,
+.link-page .pt-sep,
+.spotlight-page .pt-sep {
+    display: none;
+}
+
+.text-page.entry-title-page {
+    transform: translateY(3px);
+}
+
+.text-page.entry-title-page .pt-sep {
+    top: 12px;
+}
+
+.pt-header.forced-title {
+    cursor: default;
+}
+
+/* show a title placeholder on hover */
+.pt-ghost {
+    position: absolute;
+    left: 8px;
+    width: 100px;
+    top: -3px;
+    height: 11px;
+    border: 1px dashed rgba(90,60,20,.5);
+    color: rgba(90,60,20,.7);
+    text-align: center;
+    font-size: 7px;
+    line-height: 10px;
+    cursor: text;
+    opacity: 0;
+    background: rgba(220,202,160,0.95);
+    z-index: 10;
+}
+
+:is(.text-page:not(.entry-title-page), .link-page, .quest-page) > .pt-ghost {
+    top: -1px;
+}
+
+.pt-ghost.name {
+    line-height: 9px;
+}
+
+.page:hover .pt-ghost {
+    opacity: 1;
+}
+
+/* page text */
+.pt-text {
+    position: absolute;
+    left: 0;
+    width: 115px;
+    cursor: text;
+    word-wrap: break-word;
+    z-index: 1;
+    font-size: var(--book-font-size, 9px);
+    line-height: var(--book-font-size, 9px);
+}
+
+/* move text down to make room for the title placeholder */
+.page:hover :is(.text-page:not(.entry-title-page), .link-page, .quest-page) > .pt-ghost ~ .pt-text,
+:is(.text-page:not(.entry-title-page), .link-page, .quest-page) > .pt-ghost.editing ~ .pt-text {
+    transform: translateY(12px);
+}
+
+.pt-text:hover {
+    outline: 1px dashed rgba(90,60,20,.45);
+}
+
+.pt-text.empty::before {
+    content: attr(data-ph);
+    color: rgba(90,60,20,.55);
+    font-style: italic;
+}
+
+.pt-text .li {
+    display: block;
+    padding-left: 8px;
+    text-indent: -8px;
+}
+
+.pt-text .lnk {
+    text-decoration: underline;
+}
+
+.pt-text .tip {
+    border-bottom: 1px dotted currentColor;
+}
+
+.pt-text .obf {
+    background: repeating-linear-gradient(90deg, rgba(0,0,0,.35) 0 1px, transparent 1px 2px);
+}
+
+/* keep the red overflow outline while editing */
+.pt-text.overflow.editing {
+    outline: 1px solid #c00 !important;
+}
+
+/* highlight the page without blocking clicks */
+.page.selected::after {
+    content: "";
+    position: absolute;
+    inset: -4px -3px;
+    border: 1px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    pointer-events: none;
+}
+
+.page.clickable {
+    cursor: pointer;
+}
+
+/* item slots */
+
+.slot {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #8b8b8b;
+    border: 1px solid;
+    border-color: #373737 #fff #fff #373737;
+    cursor: pointer;
+}
+
+.slot .ico {
+    position: absolute;
+    inset: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: bold 6px/1 monospace;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    text-transform: uppercase;
+}
+
+.slot:hover,
+.slot.selected {
+    outline: 1px solid var(--accent);
+}
+
+.slot.s3 {
+    width: 50px;
+    height: 50px;
+}
+
+.slot.s3 .ico {
+    font-size: 14px;
+}
+
+/* spotlight icons */
+
+.spotlight-item {
+    position: absolute;
+}
+
+.spotlight-item .ico {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: bold 8px/1 monospace;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    text-transform: uppercase;
+}
+
+.spotlight-item .ico.has-icon {
+    text-shadow: none;
+}
+
+/* recipe pages */
+
+.crafting-page .pt-header {
+    top: -3px;
+}
+
+.crafting-page .pt-sep,
+.smelting-page .pt-sep {
+    display: none;
+}
+
+.crafting-recipe,
+.smelting-sprite {
+    position: absolute;
+    background: url("../../themes/default_dark/images/patchouli/crafting.png") left top / 128px 256px no-repeat;
+    image-rendering: pixelated;
+}
+
+.crafting-recipe {
+    cursor: pointer;
+}
+
+/* hide recipe IDs until editing */
+.recipe-id {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.recipe-id.editing {
+    pointer-events: auto;
+}
+
+.smelting-recipe {
+    position: absolute;
+    cursor: pointer;
+}
+
+.smelting-slot {
+    background-position: -11px -71px;
+}
+
+.smelting-arrow {
+    background-position: -38px -79px;
+}
+
+/* small labels and boxes */
+
+.mini-label {
+    position: absolute;
+    left: 0;
+    width: 116px;
+    text-align: center;
+    font-size: 6.5px;
+    line-height: 8px;
+    color: rgba(60,40,10,.8);
+    cursor: text;
+}
+
+.mini-label:not([contenteditable]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mini-label:hover {
+    background: rgba(255,255,255,.35);
+}
+
+.box-frame {
+    position: absolute;
+    border: 1px solid #5b4528;
+    background: rgba(60,40,10,.12);
+}
+
+.box-frame.hatch {
+    background: repeating-linear-gradient(45deg, rgba(90,60,20,.12) 0 3px, transparent 3px 6px);
+}
+
+.box-frame .cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 7px;
+    color: #4a3a22;
+    padding: 0 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* center the quest label */
+.box-frame.quest-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-frame.quest-box .cap {
+    position: static;
+    width: 100%;
+    font-family: var(--book-control-font, var(--book-font));
+    line-height: 1;
+}
+
+/* image, multiblock and entity previews */
+
+.preview-page {
+    transform: translateY(3px);
+}
+
+.preview-page .pt-sep {
+    display: none;
+}
+
+.preview-frame {
+    position: absolute;
+}
+
+/* add the border without blocking clicks */
+.preview-frame.bordered::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--book-texture) -405px -149px / 512px 256px no-repeat;
+    image-rendering: pixelated;
+}
+
+.preview-content {
+    position: absolute;
+    inset: 3px;
+    overflow: hidden;
+}
+
+.preview-content .cap {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 0 2px;
+    text-align: center;
+    font-size: 7px;
+    line-height: 9px;
+    color: #4a3a22;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.preview-content :is(img, canvas, video, svg) {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-page {
+    transform: translateY(2px);
+}
+
+/* image pages use the top-left 200/256 of the texture */
+.image-page .image-texture {
+    display: block;
+    width: 128px;
+    height: 128px;
+    max-width: none;
+    max-height: none;
+    object-fit: fill;
+    image-rendering: pixelated;
+}
+
+.image-page .pt-header {
+    top: -3px;
+}
+
+.image-page .pt-sep {
+    display: none;
+}
+
+/* small image arrows from the book texture */
+.image-arrow {
+    position: absolute;
+    top: 100px;
+    width: 5px;
+    height: 7px;
+    padding: 0;
+    border: none;
+    background: var(--book-texture) -272px -20px / 512px 256px no-repeat;
+    image-rendering: pixelated;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.image-arrow.prev {
+    background-position-y: -27px;
+}
+
+.image-arrow:hover,
+.image-arrow:focus-visible {
+    background-position-x: -277px;
+}
+
+/* patchouli adds these two overlapping shadows behind framed image arrows */
+.image-arrow-shade {
+    position: absolute;
+    left: 87px;
+    top: 98px;
+    width: 21px;
+    height: 12px;
+    background: #0004;
+    pointer-events: none;
+}
+
+.image-arrow-shade::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 20px;
+    height: 11px;
+    background: #0004;
+}
+
+/* small version of the multiblock preview */
+.preview-content > .mb-isometric {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 100%;
+    height: 72px;
+}
+
+.preview-content > .mb-isometric .mb-iso-floor {
+    fill: rgba(90,60,20,.08);
+    stroke: rgba(90,60,20,.25);
+}
+
+/* multiblock visualize button */
+.multiblock-eye {
+    position: absolute;
+    left: 12px;
+    top: 97px;
+    width: 11px;
+    height: 11px;
+    padding: 0;
+    border: none;
+    background: var(--book-texture) -308px -31px / 512px 256px no-repeat;
+    image-rendering: pixelated;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.multiblock-eye:hover,
+.multiblock-eye:focus-visible {
+    background-position-x: -319px;
+}
+
+/* book buttons and links */
+
+/* mc style button */
+.pt-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    border: 3px solid transparent;
+    border-image: url("../images/minecraft_button.png") 3 fill / 3px / 0 repeat;
+    image-rendering: pixelated;
+    color: #fff;
+    font-family: "Guidebook Minecraft Controls", "Guidebook Uniform", sans-serif;
+    font-size: 9px;
+    font-weight: normal;
+    line-height: 9px;
+    padding: 0 0 2px;
+    text-align: center;
+    text-shadow: 1px 1px 0 #3f3f3f;
+    cursor: pointer;
+    user-select: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.pt-btn .btn-label {
+    min-width: 0;
+    padding-bottom: 1px;
+    margin-bottom: -1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pt-btn:is(:hover, :focus-visible):not([contenteditable]):not(.disabled) {
+    border-image-source: url("../images/minecraft_button_highlighted.png");
+}
+
+.pt-btn.disabled {
+    opacity: 0.45;
+    color: #a0a0a0;
+    text-shadow: 1px 1px 0 #3f3f3f;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* show the remove button on hover */
+.rel-row {
+    position: absolute;
+    left: 6px;
+    width: 104px;
+    height: 11px;
+    font-size: 8px;
+    line-height: 11px;
+    color: #00e;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rel-row .x {
+    float: right;
+    color: #a00;
+    display: none;
+}
+
+.rel-row:hover .x {
+    display: inline;
+}
+
+/* dashed buttons for adding content */
+.add-ghost {
+    position: absolute;
+    border: 1px dashed rgba(90,60,20,.7);
+    color: rgba(90,60,20,.8);
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--book-control-font, var(--book-font));
+    font-size: 8px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-ghost:hover {
+    background: rgba(255,255,255,.35);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.book:is(.landing, .category-index) .page:not(:hover) .add-ghost {
+    display: none;
+}
+
+/* category index */
+
+/* entry rows and small icons */
+.idx-row {
+    position: absolute;
+    left: 0;
+    width: 116px;
+    height: 10px;
+    line-height: 10px;
+    font-family: var(--book-control-font, var(--book-font));
+    font-size: var(--book-font-size, 9px);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.idx-row::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0;
+    background: rgba(0,0,0,.133);
+    transition: width .2s;
+}
+
+.idx-row:hover::before {
+    width: 100%;
+}
+
+.idx-row.selected {
+    background: var(--accent);
+    color: #000;
+}
+
+.idx-row .mini {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 8px;
+    height: 8px;
+    font: bold 4px/8px monospace;
+    color: #fff;
+    text-align: center;
+    text-shadow: 1px 1px 0 #000;
+    overflow: hidden;
+}
+
+.idx-row .nm {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 104px;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.idx-row.priority .nm {
+    font-style: italic;
+}
+
+.idx-row.secret .nm {
+    opacity: .667;
+}
+
+/* index pages need slightly different spacing */
+.book.category-index .page {
+    top: 14px;
+    height: 156px;
+}
+
+.book.category-index .page.right {
+    left: 137px;
+}
+
+.category-index .pt-header {
+    top: 0;
+}
+
+.category-subcategories {
+    position: absolute;
+    z-index: 2;
+    overflow: auto;
+}
+
+.category-icon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--book-texture) var(--category-paper-x) var(--category-paper-y) / 512px 256px no-repeat;
+    opacity: .5;
+    transition: opacity .2s;
+}
+
+.book .category-icon:hover {
+    outline: none;
+}
+
+.category-icon:hover::before {
+    opacity: 0;
+}
+
+/* category buttons */
+.cat-btn {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.cat-btn .ico {
+    position: absolute;
+    inset: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: bold 7px/1 monospace;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    text-transform: uppercase;
+}
+
+.cat-btn:hover {
+    outline: 1px solid var(--accent);
+}
+
+.cat-btn.selected {
+    outline: 2px solid var(--accent);
+}
+
+.cat-btn.secret::after {
+    content: "?";
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    font-size: 7px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* navigation */
+
+.book .nav {
+    position: absolute;
+    width: 18px;
+    height: 10px;
+    cursor: pointer;
+    bottom: -8px;
+    background-image: var(--book-texture);
+    background-size: 512px 256px;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+}
+
+/* arrow sprites */
+.book .nav.prev {
+    left: -9px;
+    background-position: -272px -10px;
+}
+
+.book .nav.prev:hover {
+    background-position: -290px -10px;
+}
+
+.book .nav.next {
+    right: -9px;
+    background-position: -272px 0;
+}
+
+.book .nav.next:hover {
+    background-position: -290px 0;
+}
+
+.book .nav.back {
+    left: calc(50% - 9px);
+    height: 9px;
+    bottom: -8px;
+    background-position: -308px 0;
+}
+
+.book .nav.back:hover {
+    background-position: -326px 0;
+}
+
+/* landing page */
+
+.book.landing .page {
+    top: 14px;
+}
+
+.book.landing .page.right {
+    left: 137px;
+}
+
+.landing-banner {
+    position: absolute;
+    background: var(--book-texture) 0 -180px / 512px 256px no-repeat;
+}
+
+.landing-banner .landing-name {
+    left: 21px;
+    top: 3px;
+    width: 108px;
+    text-align: left;
+    line-height: 11px;
+}
+
+.landing-subtitle {
+    position: absolute;
+    left: 31px;
+    top: 11px;
+    width: 97px;
+    font-size: var(--book-font-size, 9px);
+    line-height: 11px;
+    cursor: text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.landing-subtitle[contenteditable] {
+    overflow: visible;
+}
+
+.landing-banner .editing {
+    color: #000;
+}
+
+.landing-categories-title {
+    top: 0;
+}
+
+.landing-tool {
+    position: absolute;
+    background-image: var(--book-texture);
+    background-size: 512px 256px;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+}
+
+.landing-tool.history {
+    background-position: -330px -31px;
+}
+
+.landing-tool.history:hover {
+    background-position: -341px -31px;
+}
+
+.landing-tool.advancements {
+    background-position: -330px -20px;
+}
+
+.landing-tool.advancements:hover {
+    background-position: -341px -20px;
+}
+
+.landing-tool.editor {
+    background-position: -308px -9px;
+}
+
+.landing-tool.editor:hover {
+    background-position: -319px -9px;
+}
+
+/* unlock progress */
+
+.book-progress-title {
+    position: absolute;
+    font-family: "Guidebook Minecraft", "Guidebook Uniform", sans-serif;
+    font-size: var(--book-title-font-size, 7px);
+    line-height: 9px;
+}
+
+.book .progress {
+    position: absolute;
+    border: 1px solid;
+    background: linear-gradient(var(--progress-background), color-mix(in srgb, var(--progress-background) 70%, black));
+}
+
+.book .progress > i {
+    display: block;
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(var(--progress-color), color-mix(in srgb, var(--progress-color) 70%, black));
+}
+
+/* item icons */
+
+.has-icon {
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    image-rendering: pixelated;
+    background-color: transparent;
+}
+
+.idx-row .mini.has-icon {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.islot .ico.has-icon,
+.slot .ico.has-icon,
+.cat-btn .ico.has-icon {
+    text-shadow: none;
+}
+
+/* text editing */
+
+.editing {
+    outline: 1px solid var(--accent) !important;
+    background: rgba(255,255,255,.9);
+    cursor: text;
+    opacity: 1 !important;
+    user-select: text;
+    z-index: 50;
+    min-height: 11px;
+    min-width: 20px;
+}
+
+.pt-text[contenteditable] {
+    white-space: pre-wrap;
+    min-height: 9px;
+    caret-color: #000;
+}
+
+/* invisible character keeps the last empty line editable */
+.pt-text[contenteditable]::after {
+    content: "\200b";
+    white-space: pre;
+}
+
+.pt-header[contenteditable],
+.pt-ghost[contenteditable],
+.mini-label[contenteditable],
+.pt-btn[contenteditable] {
+    text-overflow: clip;
+    overflow: visible;
+    min-height: 11px;
+    min-width: 20px;
+}
+
+.mini-label[contenteditable] {
+    min-height: 8px;
+}
+
+.pt-btn.editing,
+.pt-btn[contenteditable] {
+    background: transparent;
+    cursor: text;
+    user-select: text;
+}
+
+.pt-header[contenteditable] {
+    text-align: left;
+}
+
+/* select the whole formatting chip at once */
+.chip {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: 0;
+    padding: 0 1px;
+    user-select: all;
+}
+
+.chip.bul {
+    background: none;
+    user-select: all;
+}
+
+/* start bullets on a new line, except the first one */
+.chip.bul::before {
+    content: "\A";
+    white-space: pre;
+}
+
+.pt-text > .chip.bul:first-child::before {
+    content: none;
+}

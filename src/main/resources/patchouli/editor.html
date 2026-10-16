@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patchouli Guidebook Editor</title>
+    <!-- Load shared controls first -->
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/editor-inspector.css">
+    <link rel="stylesheet" href="css/editor-multiblock.css">
+    <link rel="stylesheet" href="css/editor-book.css">
+</head>
+<body>
+<div id="app">
+    <header id="topbar">
+        <nav id="breadcrumb"></nav>
+        <div id="formatbar">
+            <span id="argBox" class="hidden">
+                <input type="text" id="argInput" list="argSuggestions" placeholder="">
+                <datalist id="argSuggestions"></datalist>
+                <button class="fb" id="argOk">OK</button>
+            </span>
+        </div>
+    </header>
+
+    <div id="workspace">
+        <main id="stage"><div id="bookHost"></div></main>
+        <aside id="inspector"></aside>
+    </div>
+</div>
+
+<div id="popup" class="hidden"></div>
+
+<!-- Multiblock designer -->
+<div id="mbModal" class="modal hidden">
+    <div class="modal-box wide">
+        <div class="modal-head"><span>Multiblock Designer</span><button class="btn" id="mbClose">Done</button></div>
+        <div class="modal-body" id="mbBody"></div>
+    </div>
+</div>
+
+<!-- Fallback item prompt -->
+<div id="itemModal" class="modal hidden">
+    <div class="modal-box">
+        <div class="modal-head"><span>Item / Block ID</span></div>
+        <div class="modal-body">
+            <input type="text" id="itemModalInput" placeholder="minecraft:diamond">
+            <div class="row end"><button class="btn" id="itemModalCancel">Cancel</button><button class="btn primary" id="itemModalOk">OK</button></div>
+        </div>
+    </div>
+</div>
+
+<script src="js/editor-core.js"></script>
+<script src="js/editor-text.js"></script>
+<script src="js/editor-book.js"></script>
+<script src="js/editor-inspector.js"></script>
+<script src="js/editor-main.js"></script>
+</body>
+</html>

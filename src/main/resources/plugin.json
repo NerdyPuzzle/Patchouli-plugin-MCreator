@@ -1,0 +1,14 @@
+{
+  "id": "patchouli_plugin",
+  "weight": 20,
+  "supportedversions": [
+    2026002
+  ],
+  "javaplugin": "net.nerdypuzzle.patchouli.Launcher",
+  "info": {
+    "name": "Patchouli Plugin",
+    "version": "1.0",
+    "description": "Allows for the creation of optional guidebooks through patchouli",
+    "author": "NerdyPuzzle"
+  }
+}
