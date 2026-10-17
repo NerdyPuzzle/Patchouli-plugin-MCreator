@@ -140,8 +140,7 @@ function newEntry(id, categoryId) {
         readByDefault: false,
         sortnum: 0,
         turnin: '',
-        entryColor: '',
-        extraRecipeMappings: {}
+        entryColor: ''
     };
 }
 

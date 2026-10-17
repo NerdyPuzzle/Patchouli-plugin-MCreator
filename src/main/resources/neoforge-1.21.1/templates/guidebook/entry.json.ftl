@@ -154,11 +154,6 @@
   "read_by_default": true</#if><#if data.sortnum != 0>,
   "sortnum": ${data.sortnum}</#if><#if data.turnin?has_content>,
   "turnin": "${generator.map(data.turnin, "achievements")}"</#if><#if data.entryColor?has_content>,
-  "entry_color": "${data.entryColor?replace("#", "")}"</#if><#if data.extraRecipeMappings?? && !data.extraRecipeMappings.isEmpty()>,
-  "extra_recipe_mappings": {
-    <#list data.extraRecipeMappings.keySet() as key>
-      "${key?json_string}": ${data.extraRecipeMappings.get(key)}<#sep>,
-    </#list>
-  }</#if>
+  "entry_color": "${data.entryColor?replace("#", "")}"</#if>
 }
 <#-- @formatter:on -->

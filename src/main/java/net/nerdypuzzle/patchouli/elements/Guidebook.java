@@ -242,7 +242,6 @@ import java.util.*;
 		public int sortnum = 0;
 		public String turnin = "";
 		public String entryColor = "";
-		public Map<String, Integer> extraRecipeMappings = new LinkedHashMap<>();
 
 		public Entry(String id, String name, String category, String icon) {
 			this.id = id;
