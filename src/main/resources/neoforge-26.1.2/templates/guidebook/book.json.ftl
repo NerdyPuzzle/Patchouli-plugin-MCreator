@@ -28,7 +28,11 @@
   <#if data.getMappedCreativeTab()?has_content>,
     "creative_tab": "${data.getMappedCreativeTab()}"
   </#if>
-  <@stringProp "model" data.model />
+  <#if data.hasCustomBookModel()>
+    <@stringProp "model" modid + ":" + registryname />
+  <#else>
+    <@stringProp "model" data.getDefaultBookModel() />
+  </#if>
   <@stringProp "book_texture" data.bookTexture />
   <@stringProp "filler_texture" data.fillerTexture />
   <@stringProp "crafting_texture" data.craftingTexture />

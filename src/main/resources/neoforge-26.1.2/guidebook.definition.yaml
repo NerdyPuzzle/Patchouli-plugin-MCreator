@@ -1,4 +1,14 @@
 templates:
+  - template: guidebook/book_item.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname.json"
+    condition: hasCustomBookModel()
+
+  - template: guidebook/book_item_model.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/items/@registryname.json"
+    condition: hasCustomBookModel()
+
   - template: guidebook/book.json.ftl
     writer: json
     name: "@MODDATAROOT/patchouli_books/@registryname/book.json"

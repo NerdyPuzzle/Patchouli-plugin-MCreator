@@ -10,8 +10,10 @@ import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.minecraft.MCItem;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.dialogs.MCItemSelectorDialog;
+import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
+import net.mcreator.workspace.resources.Model;
 import net.nerdypuzzle.patchouli.elements.Guidebook;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -177,6 +179,35 @@ public final class GuidebookJavascriptBridge {
 			LOG.error("Failed to load screen textures", e);
 		}
 		return Guidebook.GSON.toJson(textures);
+	}
+
+	@SuppressWarnings("unused") public String getItemTexturesJSON() {
+		List<String[]> textures = new ArrayList<>();
+		try {
+			for (var file : mcreator.getWorkspace().getFolderManager().getTexturesList(TextureType.ITEM)) {
+				String name = file.getName().replaceFirst("\\.png$", "");
+				textures.add(new String[]{name, name, screenTexturePreview(file.toPath(), 24)});
+			}
+			textures.sort(Comparator.comparing(t -> t[1], String.CASE_INSENSITIVE_ORDER));
+		} catch (Exception e) {
+			LOG.error("Failed to load item textures", e);
+		}
+		return Guidebook.GSON.toJson(textures);
+	}
+
+	@SuppressWarnings("unused") public String getJSONModelsJSON() {
+		List<String[]> models = new ArrayList<>();
+		try {
+			String icon = iconURI(UIRES.get("model.small_json"));
+			for (Model model : Model.getModelsWithTextureMaps(mcreator.getWorkspace())) {
+				if (model.getType() == Model.Type.JSON)
+					models.add(new String[]{model.getReadableName(), model.toString(), icon});
+			}
+			models.sort(Comparator.comparing(m -> m[1], String.CASE_INSENSITIVE_ORDER));
+		} catch (Exception e) {
+			LOG.error("Failed to load JSON models", e);
+		}
+		return Guidebook.GSON.toJson(models);
 	}
 
 	@SuppressWarnings("unused") public String getScreenTextureURI(String location) {

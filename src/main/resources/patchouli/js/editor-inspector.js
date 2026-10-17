@@ -490,14 +490,23 @@ function bookInspector(inspector) {
         c[0].toUpperCase() + c.slice(1) + ' book'
     ]);
     settingsSection._body.append(
-        selF('Book texture', gb, 'bookTexture', colors, () => {
-            const m = /book_([a-z]+)\.png/.exec(gb.bookTexture);
-            if (m) {
-                gb.model = 'patchouli:book_' + m[1];
-            }
-            renderInspector();
-        }),
-        textF('Book item model', gb, 'model', { noBook: true }),
+        selF('Book texture', gb, 'bookTexture', colors),
+        selF('Book item model', gb, 'itemModelType', [
+            ['default', 'Default book'],
+            ['texture', 'Item texture'],
+            ['json', 'JSON model']
+        ], renderInspector)
+    );
+    if (gb.itemModelType === 'texture') {
+        const textures = bridgeList('getItemTexturesJSON', 'item textures', []);
+        settingsSection._body.appendChild(selF('Item texture', gb, 'itemTexture',
+            [['', 'Choose item texture']].concat(textures)));
+    } else if (gb.itemModelType === 'json') {
+        const models = bridgeList('getJSONModelsJSON', 'JSON models', []);
+        settingsSection._body.appendChild(selF('JSON model', gb, 'customModelName',
+            [['', 'Choose JSON model']].concat(models)));
+    }
+    settingsSection._body.append(
         textF('Filler texture', gb, 'fillerTexture', {
             noBook: true,
             ph: 'modid:textures/gui/filler.png'

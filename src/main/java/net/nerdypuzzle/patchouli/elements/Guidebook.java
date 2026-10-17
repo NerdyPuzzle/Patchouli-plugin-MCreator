@@ -3,9 +3,15 @@ package net.nerdypuzzle.patchouli.elements;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.mcreator.element.GeneratableElement;
+import net.mcreator.element.parts.TextureHolder;
+import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.StringUtils;
 import net.mcreator.workspace.Workspace;
 import net.mcreator.workspace.elements.ModElement;
+import net.mcreator.workspace.references.ResourceReference;
+import net.mcreator.workspace.references.TextureReference;
+import net.mcreator.workspace.resources.Model;
+import net.mcreator.workspace.resources.TexturedModel;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -21,7 +27,9 @@ import java.util.*;
 	public String version = "0";
 	public boolean pamphlet = false;
 	public String creativeTab = "TOOLS";
-	public String model = "patchouli:book_brown";
+	public String itemModelType = "default";
+	@TextureReference(TextureType.ITEM) public TextureHolder itemTexture = new TextureHolder(null, "");
+	@ResourceReference("model") public String customModelName = "";
 	public String bookTexture = "patchouli:textures/gui/book_brown.png";
 	public String fillerTexture = "";
 	public String craftingTexture = "";
@@ -96,6 +104,44 @@ import java.util.*;
 
 	public String toJson() {
 		return GSON.toJson(this);
+	}
+
+	public boolean hasItemTextureModel() {
+		return "texture".equals(itemModelType) && itemTexture != null && !itemTexture.isEmpty();
+	}
+
+	public boolean hasJSONModel() {
+		return "json".equals(itemModelType) && customModelName != null && !customModelName.isBlank();
+	}
+
+	public boolean hasCustomBookModel() {
+		return hasItemTextureModel() || hasJSONModel();
+	}
+
+	public String getDefaultBookModel() {
+		for (String color : List.of("brown", "blue", "cyan", "gray", "green", "purple", "red")) {
+			if (("patchouli:textures/gui/book_" + color + ".png").equals(bookTexture))
+				return "patchouli:book_" + color;
+		}
+		return "patchouli:book_brown";
+	}
+
+	public String getItemTextureLocation() {
+		if (itemTexture == null || itemTexture.isEmpty())
+			return "";
+		itemTexture.setWorkspace(getModElement() != null ? getModElement().getWorkspace() : null);
+		return itemTexture.format("%s:item/%s");
+	}
+
+	public Map<String, TextureHolder> getTextureMap() {
+		if (hasJSONModel() && getModElement() != null
+				&& Model.getModelByParams(getModElement().getWorkspace(), customModelName, Model.Type.JSON)
+				instanceof TexturedModel textured && textured.getTextureMapping() != null) {
+			Map<String, TextureHolder> textures = textured.getTextureMapping().getTextureMap();
+			textures.values().forEach(texture -> texture.setWorkspace(getModElement().getWorkspace()));
+			return textures;
+		}
+		return Collections.emptyMap();
 	}
 
 	public String mapCreativeTab(String tab, @Nullable Workspace workspace) {
