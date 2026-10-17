@@ -314,7 +314,6 @@ details.sec > .sec-body {
     height: 24px;
     object-fit: contain;
     image-rendering: pixelated;
-    background: rgba(128,128,128,.15);
 }
 
 .csel-opt.has-preview {
