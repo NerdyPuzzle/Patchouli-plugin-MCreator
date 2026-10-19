@@ -18,7 +18,7 @@ public class Launcher extends JavaPlugin {
 		super(plugin);
 
 		addListener(PreGeneratorsLoadingEvent.class, e -> ModElementTypeLoader.register(
-				new ModElementType<>("guidebook", 'g', GuidebookGUI::new, Guidebook.class)));
+				new ModElementType<>("guidebook", 'G', GuidebookGUI::new, Guidebook.class)));
 
 		LOG.info("Patchouli plugin was loaded");
 	}
