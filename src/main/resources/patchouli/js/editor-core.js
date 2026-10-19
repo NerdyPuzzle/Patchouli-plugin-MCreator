@@ -112,8 +112,7 @@ function newPage(type) {
         linkText: '',
         entries: [],
         trigger: '',
-        drawFiller: true,
-        customVariables: {}
+        drawFiller: true
     };
     if (page.type === 'patchouli:multiblock') {
         page.name = 'Multiblock';
@@ -168,7 +167,6 @@ function normalize(source) {
             const np = Object.assign(newPage(p.type), p);
             np.images = np.images || [];
             np.entries = np.entries || [];
-            np.customVariables = np.customVariables || {};
             return np;
         });
         return ne;

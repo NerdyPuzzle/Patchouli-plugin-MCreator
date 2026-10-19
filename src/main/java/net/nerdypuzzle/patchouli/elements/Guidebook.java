@@ -336,8 +336,6 @@ import java.util.*;
 
 		public boolean drawFiller = true;
 
-		public Map<String, String> customVariables = new LinkedHashMap<>();
-
 		public Page(String type) {
 			this.type = type;
 		}
