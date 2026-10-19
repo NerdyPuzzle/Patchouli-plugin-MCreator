@@ -204,11 +204,19 @@
 .mb-pal input {
     flex: 1 1 auto;
     min-width: 0;
-    padding: 2px 4px;
+    height: 22px;
+    padding: 0 4px;
     background: var(--bg);
     color: var(--fg);
     border: 1px solid var(--border);
     border-radius: 0;
+    font: inherit;
+    line-height: normal;
+    text-overflow: ellipsis;
+}
+
+.mb-side .btn.small {
+    padding: 3px 6px 3px;
 }
 
 /* layer tabs */

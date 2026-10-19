@@ -118,7 +118,7 @@ function mbIsometric(multiblock, selectedLayer = -1, layerOnly = false, onSelect
             'data-layer': l, 'data-row': r, 'data-column': c,
             style: '--block-hue:' + hue(bare(value))
         });
-        const name = ch === '_' ? 'Any block' : ch === '0' ? 'Center' : value;
+        const name = ch === '_' ? 'Any block' : ch === '0' ? 'Center: ' + (mapping['0'] || 'Air') : value;
         group.appendChild(svg('title', {}, name + ' (' + (l === 0 ? 'Top' : 'L' + (l + 1)) + ', row ' + (r + 1) + ', column ' + (c + 1) + ')'));
         const face = (className, vertices) => group.appendChild(svg('polygon', { class: className, points: points(vertices) }));
         const back = project(r, c, y + 1);
@@ -209,9 +209,10 @@ function renderMb() {
         h('div', 'ins-title', { text: 'Palette (click to paint, right-click a cell to erase)' })
     );
     const addPaletteEntry = (ch, label, custom) => {
+        const isCenter = ch === '0';
         const r = h('div', 'mb-pal' + (mb.paint === ch ? ' active' : ''));
         const c = h('div', 'ch', { text: ch === ' ' ? '\u2423' : ch });
-        if (custom) {
+        if (custom && (!isCenter || multiblock.mapping[ch])) {
             blockBg(c, multiblock.mapping[ch] || ch);
         }
         r.appendChild(c);
@@ -219,10 +220,14 @@ function renderMb() {
             const inp = h('input', null, {
                 type: 'text',
                 value: multiblock.mapping[ch] || '',
-                placeholder: 'minecraft:stone[state=value]'
+                placeholder: isCenter ? 'Center block (air)' : 'minecraft:stone[state=value]'
             });
             inp.addEventListener('input', () => {
-                multiblock.mapping[ch] = inp.value;
+                if (isCenter && !inp.value.trim()) {
+                    delete multiblock.mapping[ch];
+                } else {
+                    multiblock.mapping[ch] = inp.value;
+                }
                 renderMbPreview();
             });
             inp.addEventListener('change', renderMb);
@@ -246,8 +251,10 @@ function renderMb() {
                     onclick: ev => {
                         ev.stopPropagation();
                         delete multiblock.mapping[ch];
-                        clearChar(multiblock, ch);
-                        mb.paint = '_';
+                        if (!isCenter) {
+                            clearChar(multiblock, ch);
+                            mb.paint = '_';
+                        }
                         renderMb();
                     }
                 })
@@ -263,7 +270,7 @@ function renderMb() {
     };
     addPaletteEntry(' ', 'Air');
     addPaletteEntry('_', 'Any block');
-    addPaletteEntry('0', 'Center (player cursor)');
+    addPaletteEntry('0', 'Center (player cursor)', true);
     Object.keys(multiblock.mapping)
         .filter(k => k !== '0')
         .forEach(k => addPaletteEntry(k, '', true));
@@ -322,9 +329,8 @@ function renderMb() {
             const sp = special[ch];
             const cell = h('div', 'mb-cell' + (sp ? ' ' + sp[0] : ''), {
                 text: ch === ' ' ? '' : ch,
-                title: sp ? sp[1] : multiblock.mapping[ch] || ch
             });
-            if (!sp) {
+            if (!sp || (ch === '0' && multiblock.mapping['0'])) {
                 blockBg(cell, multiblock.mapping[ch] || ch);
             }
             const paint = v => {

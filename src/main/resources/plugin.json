@@ -7,7 +7,7 @@
   "javaplugin": "net.nerdypuzzle.patchouli.Launcher",
   "info": {
     "name": "Patchouli Plugin",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Allows for the creation of optional guidebooks through patchouli",
     "author": "NerdyPuzzle"
   }
