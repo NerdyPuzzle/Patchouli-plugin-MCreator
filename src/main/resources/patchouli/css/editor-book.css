@@ -117,6 +117,7 @@
 }
 
 .relations-page .pt-header,
+.relations-page > .pt-ghost,
 .quest-page .pt-header {
     top: 2px;
 }
@@ -1001,6 +1002,11 @@
     min-width: 20px;
 }
 
+.pt-header[contenteditable] {
+    height: 10px;
+    min-height: 10px;
+}
+
 .mini-label[contenteditable] {
     min-height: 8px;
 }
@@ -1010,10 +1016,6 @@
     background: transparent;
     cursor: text;
     user-select: text;
-}
-
-.pt-header[contenteditable] {
-    text-align: left;
 }
 
 /* select the whole formatting chip at once */
