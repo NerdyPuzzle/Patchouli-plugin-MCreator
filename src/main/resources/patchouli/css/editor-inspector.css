@@ -97,7 +97,6 @@ details.sec > .sec-body {
 .fld input[type=number],
 .fld select,
 .fld textarea,
-#itemModalInput,
 .macro-row input,
 .colorrow input[type=text],
 .itemfield input {
@@ -130,7 +129,6 @@ details.sec > .sec-body {
 .fld input[type=number]:focus,
 .fld select:focus,
 .fld textarea:focus,
-#itemModalInput:focus,
 .macro-row input:focus,
 .colorrow input[type=text]:focus,
 .itemfield input:focus,

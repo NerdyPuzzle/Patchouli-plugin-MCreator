@@ -240,7 +240,7 @@ function textRegion(parent, object, key, top, placeholder) {
     const region = h('div', 'pt-text');
     region.style.top = top + 'px';
     region.dataset.max = String(153 - top);
-    region.dataset.ph = placeholder || 'Click to write text...';
+    region.dataset.ph = placeholder || window.javabridge.t('elementgui.guidebook.text_region');
     const value = object[key] || '';
     if (value) {
         renderMarkup(region, value);
@@ -331,7 +331,9 @@ function imagePage(box, page) {
         const location = images[index];
         const source = screenTextureURI(location);
         const placeholder = h('div', 'cap', {
-            text: location ? 'Texture unavailable: ' + textureName(location) : 'Choose an image in the panel',
+            text: location
+                ? window.javabridge.t('elementgui.guidebook.error_image_unavailable') + textureName(location)
+                : window.javabridge.t('elementgui.guidebook.error_image_not_selected'),
             style: 'top:44px'
         });
         content.replaceChildren(source ? h('img', 'image-texture', {
@@ -377,19 +379,19 @@ function renderLanding(leftPage, rightPage) {
     });
     const banner = put(leftPage.box, 'landing-banner', -23, -6, 140, 31);
     banner.style.color = '#' + hex6(gb.nameplateColor);
-    const heading = h('div', 'pt-header landing-name', { text: gb.bookName || 'Book Name' });
+    const heading = h('div', 'pt-header landing-name', { text: gb.bookName || window.javabridge.t('elementgui.guidebook.name') });
     bindEdit(heading, gb, 'bookName', SINGLE);
     banner.appendChild(heading);
     if (!gb.bookName) {
         heading.style.opacity = '.5';
     }
-    const subtitle = h('div', 'landing-subtitle', { text: gb.subtitle || 'Subtitle' });
+    const subtitle = h('div', 'landing-subtitle', { text: gb.subtitle || window.javabridge.t('elementgui.guidebook.subtitle') });
     if (!gb.subtitle) {
         subtitle.style.opacity = '.5';
     }
     bindEdit(subtitle, gb, 'subtitle', SINGLE);
     banner.appendChild(subtitle);
-    const landingText = textRegion(leftPage.box, gb, 'landingText', 25, 'Landing page text...');
+    const landingText = textRegion(leftPage.box, gb, 'landingText', 25, window.javabridge.t('elementgui.guidebook.landing'));
     landingText.dataset.max = String((gb.showProgress ? 100 : 137) - 25);
     const toolsY = gb.showProgress ? 100 : 137;
     ['history', 'advancements', 'editor'].forEach((icon, i) => {
@@ -458,7 +460,7 @@ function renderCategory(leftPage, rightPage) {
         r.addEventListener('click', () => go('entry', category.id, ent.id));
     };
     const addEntryButton = (parent, y) =>
-        ghost(parent, '+ New entry', 0, y, 116, 11, () => addEntry(category.id));
+        ghost(parent, window.javabridge.t('elementgui.guidebook.newentry'), 0, y, 116, 11, () => addEntry(category.id));
     if (view.spread === 0) {
         titleBlock(
             leftPage.box,
@@ -479,7 +481,7 @@ function renderCategory(leftPage, rightPage) {
             category,
             'description',
             22,
-            'Category description...'
+            window.javabridge.t('elementgui.guidebook.category')
         );
         description.classList.add('category-description');
         description.style.color = '#' + hex6(gb.textColor);
@@ -565,7 +567,7 @@ function renderEntry(leftPage, rightPage) {
                 })
             );
         } else if (idx === entry.pages.length) {
-            ghost(node.box, '+ Add page', 8, 5, 100, 140, ev =>
+            ghost(node.box, window.javabridge.t('elementgui.guidebook.newpage'), 8, 5, 100, 140, ev =>
                 pageTypeMenu(ev, addPage)
             ).style.fontSize = '9px';
         }
@@ -589,7 +591,7 @@ function isEntryTitlePage(entry, page) {
 
 function buildPage(page, entry, box) {
     const pageType = page.type.slice(10);
-    const title = () => header(box, page, 'title', '+ title');
+    const title = () => header(box, page, 'title', window.javabridge.t('elementgui.guidebook.newtitle'));
     switch (pageType) {
         case 'text': {
             box.classList.add('text-page');
@@ -632,22 +634,16 @@ function buildPage(page, entry, box) {
             break;
         }
         case 'multiblock': {
-            if (!page.name) {
-                page.name = 'Multiblock';
-            }
-            header(box, page, 'name', '+ name');
+            header(box, page, 'name', window.javabridge.t('elementgui.guidebook.newname'));
             const { frame, content } = previewFrame(box);
             frame.style.cursor = 'pointer';
             const mbd = page.multiblock;
-            let info = 'Click to design structure';
             if (mbd && mbd.pattern.length) {
                 const rows = mbd.pattern[0].length;
                 const cols = rows ? mbd.pattern[0][0].length : 0;
-                info = mbd.pattern.length + ' \u00D7 ' + rows + ' \u00D7 ' + cols + ' structure';
+                const info = mbd.pattern.length + ' \u00D7 ' + rows + ' \u00D7 ' + cols + ' structure';
                 content.appendChild(mbIsometric(mbd));
                 content.appendChild(h('div', 'cap', { text: info, style: 'top:82px' }));
-            } else {
-                content.appendChild(h('div', 'cap', { text: info, style: 'top:45px' }));
             }
             frame.addEventListener('click', () => openMultiblock(page));
             if (page.enableVisualize) {
@@ -663,10 +659,10 @@ function buildPage(page, entry, box) {
             break;
         }
         case 'entity': {
-            header(box, page, 'name', '+ name');
+            header(box, page, 'name', window.javabridge.t('elementgui.guidebook.newname'));
             const { content } = previewFrame(box);
             content.appendChild(
-                h('div', 'cap', { text: 'Entity render', style: 'top:28px;font-size:9px' })
+                h('div', 'cap', { text: window.javabridge.t('elementgui.guidebook.entity_render'), style: 'top:28px;font-size:9px' })
             );
             miniLabel(content, 46, page, 'entity', 'minecraft:pig', 0, 100);
             textRegion(box, page, 'text', 115);
@@ -704,7 +700,7 @@ function buildPage(page, entry, box) {
         }
         case 'relations': {
             box.classList.add('relations-page');
-            header(box, page, 'title', '+ title (default: Related Chapters)');
+            header(box, page, 'title', window.javabridge.t('elementgui.guidebook.relationstitle'));
             if (!page.title) {
                 box.appendChild(
                     h('div', 'pt-header', {
@@ -730,7 +726,7 @@ function buildPage(page, entry, box) {
                     })
                 );
             });
-            ghost(box, '+ add entry', 6, 22 + page.entries.length * 12, 104, 11, ev => {
+            ghost(box, window.javabridge.t('elementgui.guidebook.addentry'), 6, 22 + page.entries.length * 12, 104, 11, ev => {
                 const items = gb.entries
                     .filter(
                         en =>
@@ -759,7 +755,9 @@ function buildPage(page, entry, box) {
             const c = put(box, 'box-frame quest-box', 8, 139, 100, 14);
             c.appendChild(
                 h('div', 'cap', {
-                    text: page.trigger ? 'Turn-in: ' + page.trigger : 'No trigger set'
+                    text: page.trigger
+                        ? window.javabridge.t('elementgui.guidebook.quest_turnin') + page.trigger
+                        : window.javabridge.t('elementgui.guidebook.error_quest_turnin')
                 })
             );
             break;
@@ -769,7 +767,7 @@ function buildPage(page, entry, box) {
                 put(box, 'box-frame hatch', 8, 5, 100, 140);
             } else {
                 box.appendChild(
-                    h('div', 'mini-label', { text: '(empty page)', style: 'top:67px' })
+                    h('div', 'mini-label', { text: window.javabridge.t('elementgui.guidebook.empty_page'), style: 'top:67px' })
                 );
             }
             break;
@@ -778,8 +776,7 @@ function buildPage(page, entry, box) {
 
 function craftingRecipeBlock(box, y, page, key) {
     const background = put(box, 'crafting-recipe', 8, y, 100, 62);
-    background.title = (page[key] || 'No recipe set') + ' (click to edit recipe ID)';
-    const label = miniLabel(box, y + 24, page, key, 'recipe id (modid:name)', 8, 100);
+    const label = miniLabel(box, y + 24, page, key, window.javabridge.t('elementgui.guidebook.recipe'), 8, 100);
     label.classList.add('recipe-id');
     background.addEventListener('click', () =>
         startEdit(
@@ -798,8 +795,7 @@ function craftingRecipeBlock(box, y, page, key) {
 
 function smeltingRecipeBlock(box, y, page, key) {
     const background = put(box, 'smelting-recipe', 8, y, 100, 24);
-    background.title = (page[key] || 'No recipe set') + ' (click to edit recipe ID)';
-    const label = miniLabel(box, y + 8, page, key, 'recipe id (modid:name)', 8, 100);
+    const label = miniLabel(box, y + 8, page, key, window.javabridge.t('elementgui.guidebook.recipe'), 8, 100);
     label.classList.add('recipe-id');
     background.addEventListener('click', () =>
         startEdit(

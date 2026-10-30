@@ -256,20 +256,7 @@ function uniqueId(base, list) {
     return id;
 }
 
-function fromBridge(method, fallback, ...args) {
-    try {
-        if (window.javabridge) {
-            const result = window.javabridge[method](...args);
-            if (result) {
-                return result;
-            }
-        }
-    } catch (e) {
-        /* ignore */
-    }
-    return fallback;
-}
-const modId = () => fromBridge('getWorkspaceModId', 'modid');
+const modId = () => window.javabridge.getWorkspaceModId();
 
 function hue(text) {
     let hash = 7;
@@ -291,24 +278,14 @@ function iconURI(id) {
     if (!id) {
         return '';
     }
-    try {
-        if (window.javabridge && typeof window.javabridge.getMCItemURI === 'function') {
-            const uri = window.javabridge.getMCItemURI(id);
-            if (uri) {
-                return uri;
-            }
-        }
-    } catch (e) {
-        /* ignore */
-    }
-    return '';
+    return window.javabridge.getMCItemURI(id);
 }
 
 function textureName(location) {
     return String(location || '').split(/[\\/:]/).pop().replace(/\.png$/i, '');
 }
 
-const screenTextureURI = location => location ? fromBridge('getScreenTextureURI', '', location) : '';
+const screenTextureURI = location => location ? window.javabridge.getScreenTextureURI(location) : '';
 
 function applyIcon(element, value) {
     element.textContent = '';
@@ -400,28 +377,13 @@ function multiblockHasCenter(multiblock) {
 }
 
 function pickItem(onPick) {
-    if (window.javabridge && typeof window.javabridge.openMCItemSelector === 'function') {
-        window.javabridge.openMCItemSelector({
-            callback: item => {
-                if (item) {
-                    onPick(String(item));
-                }
+    window.javabridge.openMCItemSelector({
+        callback: item => {
+            if (item) {
+                onPick(item);
             }
-        });
-        return;
-    }
-    const modal = $('itemModal');
-    const input = $('itemModalInput');
-    input.value = '';
-    modal.classList.remove('hidden');
-    input.focus();
-    $('itemModalOk').onclick = () => {
-        modal.classList.add('hidden');
-        if (input.value.trim()) {
-            onPick(input.value.trim());
         }
-    };
-    $('itemModalCancel').onclick = () => modal.classList.add('hidden');
+    });
 }
 
 function showPopup(event, items) {
@@ -456,7 +418,7 @@ function dangerBtn(label, onConfirm) {
             return onConfirm();
         }
         armed = true;
-        button.textContent = 'Click again to confirm';
+        button.textContent = window.javabridge.t('elementgui.guidebook.confirm_delete');
         setTimeout(() => {
             armed = false;
             button.textContent = label;

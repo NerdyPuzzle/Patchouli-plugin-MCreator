@@ -1136,20 +1136,20 @@ function buildFormatBar() {
         appendControl(s);
     });
     addSeparator();
-    addButton('Link', 'Link to an entry, category or website', () =>
-        showArgBox('link', 'entry id, category id or https://...')
+    addButton('Link', '', () =>
+        showArgBox('link', window.javabridge.t('elementgui.guidebook.link_hint'))
     );
-    addButton('Tip', 'Tooltip shown on hover', () => showArgBox('tip', 'tooltip text'));
-    addButton('Cmd', 'Command run when clicked', () => showArgBox('cmd', '/command'));
+    addButton('Tip', '', () => showArgBox('tip', 'tooltip text'));
+    addButton('Cmd', '', () => showArgBox('cmd', '/command'));
     addSeparator();
     addButton(
         'Clear',
-        'Remove formatting from the selection, or stop formatting at the caret (Ctrl+Space)',
+        '',
         clearFormat
     );
     addButton(
         '\u2022 List',
-        'Toggle bullet on this line (Enter = next bullet, Tab / Shift+Tab = indent, "- " starts a list)',
+        '',
         () => {
             const host = richHost();
             if (!host) {
@@ -1161,7 +1161,7 @@ function buildFormatBar() {
         }
     );
     addButton('Player', 'Player name', () => insertChip('$(playername)', 'Player'));
-    addButton('Key', 'Keybind', () => showArgBox('key', 'keybind name, e.g. togglePerspective'));
+    addButton('Key', 'Keybind', () => showArgBox('key', window.javabridge.t('elementgui.guidebook.keybind_hint')));
     $('argOk').addEventListener('mousedown', ev => {
         ev.preventDefault();
         applyArg();

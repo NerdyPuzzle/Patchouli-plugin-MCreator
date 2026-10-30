@@ -10,6 +10,7 @@ import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.minecraft.MCItem;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.dialogs.MCItemSelectorDialog;
+import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
@@ -286,5 +287,9 @@ public final class GuidebookJavascriptBridge {
 	private String pngURI(byte[] bytes) {
 		return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
 	}
+
+    @SuppressWarnings("unused") public String t(String key) {
+        return L10N.t(key);
+    }
 
 }

@@ -146,7 +146,7 @@ function selF(label, object, key, options, after) {
         const searchWrap = h('div', 'csel-search-wrap');
         const searchInput = h('input', 'csel-search-input', {
             type: 'text',
-            placeholder: 'Search...'
+            placeholder: window.javabridge.t('elementgui.guidebook.dropdown_search')
         });
         searchWrap.appendChild(searchInput);
         const optsList = h('div', 'csel-opts');
@@ -167,7 +167,7 @@ function selF(label, object, key, options, after) {
         function renderOptions() {
             optsList.textContent = '';
             if (filtered.length === 0) {
-                optsList.appendChild(h('div', 'csel-empty', { text: 'No matches found' }));
+                optsList.appendChild(h('div', 'csel-empty', { text: window.javabridge.t('elementgui.guidebook.dropdown_no_results') }));
                 activeIdx = -1;
                 return;
             }
@@ -372,7 +372,7 @@ function listF(label, values, placeholder) {
     });
     wrapper.appendChild(
         h('button', 'btn small', {
-            text: '+ Add',
+            text: window.javabridge.t('elementgui.guidebook.add_list_entry'),
             onclick: () => {
                 values.push('');
                 renderInspector();
@@ -385,7 +385,7 @@ function listF(label, values, placeholder) {
 function imageListF(page) {
     const wrapper = h('div');
     const options = [['', 'Choose texture']].concat(
-        bridgeList('getScreenTexturesJSON', 'screen textures', [])
+        window.javabridge.getScreenTexturesJSON()
     );
     page.images.forEach(value => {
         if (value && !options.some(o => o[0] === value)) {
@@ -399,7 +399,7 @@ function imageListF(page) {
                 renderBook();
             }),
             h('button', 'btn small', {
-                text: '\u2715', title: 'Remove image', 'aria-label': 'Remove image',
+                text: '\u2715',
                 onclick: () => {
                     page.images.splice(i, 1);
                     renderAll();
@@ -415,7 +415,7 @@ function imageListF(page) {
         }
     }));
     if (options.length === 1) {
-        wrapper.appendChild(h('div', 'ins-hint', { text: 'Import a screen texture to add an image.' }));
+        wrapper.appendChild(h('div', 'ins-hint', { text: window.javabridge.t('elementgui.guidebook.no_images_found') }));
     }
     return fld('Images', wrapper);
 }
@@ -442,104 +442,85 @@ function renderInspector() {
     inspector.scrollTop = scrollTop;
 }
 
-function bridgeList(method, what, fallback) {
-    if (window.javabridge) {
-        try {
-            const raw = window.javabridge[method]();
-            const list = Array.isArray(raw)
-                ? raw
-                : typeof raw === 'string'
-                  ? JSON.parse(raw)
-                  : null;
-            if (Array.isArray(list) && list.length > 0) {
-                return list;
-            }
-        } catch (e) {
-            console.error('Failed to load ' + what + ' from bridge', e);
-        }
-    }
-    return fallback;
-}
-
 function getCreativeTabOptions() {
-    return bridgeList('getCreativeTabsJSON', 'creative tabs', [['', 'No creative tab']]);
+    return window.javabridge.getCreativeTabsJSON();
 }
 
 function getAdvancementOptions() {
-    return bridgeList('getAdvancementsJSON', 'advancements', [['', 'No advancement']]);
+    return window.javabridge.getAdvancementsJSON();
 }
 
 function getSoundOptions() {
-    return bridgeList('getSoundsJSON', 'sounds', [['', 'Default sound']]);
+    return window.javabridge.getSoundsJSON();
 }
 
 function bookInspector(inspector) {
-    inspector.appendChild(h('div', 'ins-title', { text: 'Book Settings' }));
-    let settingsSection = section('General', true);
+    inspector.appendChild(h('div', 'ins-title', { text: window.javabridge.t('elementgui.guidebook.book_settings') }));
+    let settingsSection = section(window.javabridge.t('elementgui.guidebook.general'), true);
     settingsSection._body.append(
-        textF('Edition / version (0 = none)', gb, 'version', { ph: '0' }),
-        selF('Creative tab', gb, 'creativeTab', getCreativeTabOptions()),
-        checkF('Pamphlet (single category)', gb, 'pamphlet'),
-        selF('Advancements root tab', gb, 'advancementsTab', getAdvancementOptions()),
-        itemF('Index icon', gb, 'indexIcon')
+        textF(window.javabridge.t('elementgui.guidebook.edition'), gb, 'version', { ph: '0' }),
+        selF(window.javabridge.t('elementgui.guidebook.creative_tab'), gb, 'creativeTab', getCreativeTabOptions()),
+        checkF(window.javabridge.t('elementgui.guidebook.pamphlet'), gb, 'pamphlet'),
+        selF(window.javabridge.t('elementgui.guidebook.advancements_root'), gb, 'advancementsTab', getAdvancementOptions()),
+        itemF(window.javabridge.t('elementgui.guidebook.index_icon'), gb, 'indexIcon')
     );
     inspector.appendChild(settingsSection);
-    settingsSection = section('Appearance', false);
+    settingsSection = section(window.javabridge.t('elementgui.guidebook.book_appearance'), false);
     const colors = BOOK_COLORS.map(c => [
         'patchouli:textures/gui/book_' + c + '.png',
         c[0].toUpperCase() + c.slice(1) + ' book'
     ]);
     settingsSection._body.append(
-        selF('Book texture', gb, 'bookTexture', colors),
-        selF('Book item model', gb, 'itemModelType', [
-            ['default', 'Default book'],
-            ['texture', 'Item texture'],
-            ['json', 'JSON model']
+        selF(window.javabridge.t('elementgui.guidebook.book_texture'), gb, 'bookTexture', colors),
+        selF(window.javabridge.t('elementgui.guidebook.item_model'), gb, 'itemModelType', [
+            ['default', window.javabridge.t('elementgui.guidebook.item_default')],
+            ['texture', window.javabridge.t('elementgui.guidebook.item_texture')],
+            ['json', window.javabridge.t('elementgui.guidebook.item_json')]
         ], renderInspector)
     );
     if (gb.itemModelType === 'texture') {
-        const textures = bridgeList('getItemTexturesJSON', 'item textures', []);
+        const textures = window.javabridge.getItemTexturesJSON();
         settingsSection._body.appendChild(selF('Item texture', gb, 'itemTexture',
             [['', 'Choose item texture']].concat(textures)));
     } else if (gb.itemModelType === 'json') {
-        const models = bridgeList('getJSONModelsJSON', 'JSON models', []);
+        const models = window.javabridge.getJSONModelsJSON();
         settingsSection._body.appendChild(selF('JSON model', gb, 'customModelName',
             [['', 'Choose JSON model']].concat(models)));
     }
     settingsSection._body.append(
-        textF('Filler texture', gb, 'fillerTexture', {
+        textF(window.javabridge.t('elementgui.guidebook.filler_texture'), gb, 'fillerTexture', {
             noBook: true,
             ph: 'modid:textures/gui/filler.png'
         }),
-        textF('Crafting texture', gb, 'craftingTexture', {
+        textF(window.javabridge.t('elementgui.guidebook.crafting_texture'), gb, 'craftingTexture', {
             noBook: true,
             ph: 'modid:textures/gui/crafting.png'
         }),
-        colorF('Text color', gb, 'textColor'),
-        colorF('Header color', gb, 'headerColor'),
-        colorF('Nameplate color', gb, 'nameplateColor'),
-        colorF('Link color', gb, 'linkColor'),
-        colorF('Link hover color', gb, 'linkHoverColor'),
-        colorF('Progress bar color', gb, 'progressBarColor'),
-        colorF('Progress bar background', gb, 'progressBarBackground'),
-        checkF('Use vanilla (blocky) font', gb, 'useBlockyFont')
+        colorF(window.javabridge.t('elementgui.guidebook.text_color'), gb, 'textColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.header_color'), gb, 'headerColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.nameplate_color'), gb, 'nameplateColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.link_color'), gb, 'linkColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.link_hover_color'), gb, 'linkHoverColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.progress_bar_color'), gb, 'progressBarColor'),
+        colorF(window.javabridge.t('elementgui.guidebook.progress_bar_background'), gb, 'progressBarBackground'),
+        checkF(window.javabridge.t('elementgui.guidebook.use_vanilla_font'), gb, 'useBlockyFont')
     );
     inspector.appendChild(settingsSection);
-    settingsSection = section('Behavior', false);
+    settingsSection = section(window.javabridge.t('elementgui.guidebook.behavior'), false);
     const sounds = getSoundOptions();
     settingsSection._body.append(
-        checkF('Show progress bar', gb, 'showProgress'),
-        checkF('Show toasts', gb, 'showToasts'),
-        checkF('Pause game in singleplayer', gb, 'pauseGame'),
-        selF('Text overflow', gb, 'textOverflowMode', ['overflow', 'resize', 'truncate']),
-        selF('Open sound', gb, 'openSound', sounds),
-        selF('Flip sound', gb, 'flipSound', sounds)
+        checkF(window.javabridge.t('elementgui.guidebook.show_progress_bar'), gb, 'showProgress'),
+        checkF(window.javabridge.t('elementgui.guidebook.show_toasts'), gb, 'showToasts'),
+        checkF(window.javabridge.t('elementgui.guidebook.pause_singleplayer'), gb, 'pauseGame'),
+        selF(window.javabridge.t('elementgui.guidebook.text_overflow'), gb, 'textOverflowMode', ['overflow', 'resize', 'truncate']),
+        selF(window.javabridge.t('elementgui.guidebook.open_sound'), gb, 'openSound', sounds),
+        selF(window.javabridge.t('elementgui.guidebook.flip_sound'), gb, 'flipSound', sounds)
     );
     inspector.appendChild(settingsSection);
-    settingsSection = section('Obtaining the book', false);
+    settingsSection = section(window.javabridge.t('elementgui.guidebook.obtaining'), false);
     settingsSection._body.append(
-        checkF('Give on first world join', gb, 'giveOnFirstJoin'),
-        checkF('Crafting recipe', gb, 'hasRecipe', renderInspector)
+        checkF(window.javabridge.t('elementgui.guidebook.give_on_join'), gb, 'giveOnFirstJoin'),
+        checkF(window.javabridge.t('elementgui.guidebook.book_recipe'), gb, 'hasRecipe', renderInspector)
     );
     if (gb.hasRecipe) {
         recipeEditor(settingsSection._body);
@@ -560,12 +541,12 @@ function recipeEditor(parent) {
     };
     parent.appendChild(
         selF(
-            'Recipe type',
+            window.javabridge.t('elementgui.guidebook.recipe_type'),
             gb,
             'recipeType',
             [
-                ['shapeless', 'Shapeless'],
-                ['shaped', 'Shaped (3\u00D73)']
+                ['shapeless', window.javabridge.t('elementgui.guidebook.shapeless_recipe')],
+                ['shaped', window.javabridge.t('elementgui.guidebook.shaped_recipe')]
             ],
             () => {
                 store(getSlots());
@@ -578,9 +559,7 @@ function recipeEditor(parent) {
     });
     const slots = getSlots();
     slots.forEach((v, i) => {
-        const s = h('div', 'islot big' + (v ? '' : ' empty'), {
-            title: v || 'empty (left-click pick, right-click clear)'
-        });
+        const s = h('div', 'islot big' + (v ? '' : ' empty'));
         if (i === recipeSlot) {
             s.style.outline = '2px solid var(--accent)';
         }
@@ -616,12 +595,7 @@ function recipeEditor(parent) {
         store(a);
         renderInspector();
     });
-    parent.appendChild(fld('Selected slot', input));
-    if (gb.recipeType !== 'shaped') {
-        parent.appendChild(
-            h('div', 'ins-hint', { text: 'Shapeless: slot positions do not matter.' })
-        );
-    }
+    parent.appendChild(fld(window.javabridge.t('elementgui.guidebook.selected_slot'), input));
 }
 
 function categoryInspector(inspector, category) {
@@ -629,9 +603,9 @@ function categoryInspector(inspector, category) {
         return;
     }
     inspector.appendChild(
-        h('div', 'ins-title', { text: 'Category: ' + (category.name || category.id) })
+        h('div', 'ins-title', { text: window.javabridge.t('elementgui.guidebook.common_category') + ': ' + (category.name || category.id) })
     );
-    const settingsSection = section('Category', true);
+    const settingsSection = section(window.javabridge.t('elementgui.guidebook.common_category'), true);
     const parents = [['', '(none - root)']].concat(
         gb.categories.filter(x => canSetCategoryParent(category, x.id)).map(x => [x.id, x.name || x.id])
     );
@@ -662,9 +636,9 @@ function categoryInspector(inspector, category) {
                 renderAll();
             }
         }),
-        textF('Name', category, 'name'),
-        itemF('Icon', category, 'icon'),
-        selF('Parent category', category, 'parent', parents, () => {
+        textF(window.javabridge.t('elementgui.guidebook.common_name'), category, 'name'),
+        itemF(window.javabridge.t('elementgui.guidebook.common_icon'), category, 'icon'),
+        selF(window.javabridge.t('elementgui.guidebook.parent_category'), category, 'parent', parents, () => {
             if (!canSetCategoryParent(category, category.parent)) {
                 category.parent = '';
                 renderAll();
@@ -672,13 +646,13 @@ function categoryInspector(inspector, category) {
                 renderBreadcrumb();
             }
         }),
-        numF('Sort number', category, 'sortnum'),
-        checkF('Secret (hidden until unlocked)', category, 'secret')
+        numF(window.javabridge.t('elementgui.guidebook.common_sortnum'), category, 'sortnum'),
+        checkF(window.javabridge.t('elementgui.guidebook.secret_category'), category, 'secret')
     );
     inspector.appendChild(settingsSection);
     const row = h('div', 'row');
     row.appendChild(
-        dangerBtn('Delete category', () => {
+        dangerBtn(window.javabridge.t('elementgui.guidebook.delete_category'), () => {
             gb.entries = gb.entries.filter(e => bare(e.category) !== category.id);
             gb.categories = gb.categories.filter(x => x !== category);
             gb.categories.forEach(x => {
@@ -693,7 +667,7 @@ function categoryInspector(inspector, category) {
 }
 
 function entryInspector(inspector, entry, open) {
-    const settingsSection = section('Entry: ' + (entry.name || entry.id), open);
+    const settingsSection = section(window.javabridge.t('elementgui.guidebook.common_entry') + ': ' + (entry.name || entry.id), open);
     const categories = gb.categories.map(c => [c.id, c.name || c.id]);
     settingsSection._body.append(
         textF('Id', entry, 'id', {
@@ -719,21 +693,21 @@ function entryInspector(inspector, entry, open) {
                 renderAll();
             }
         }),
-        textF('Name', entry, 'name', { onChange: () => renderAll() }),
-        itemF('Icon', entry, 'icon'),
-        selF('Category', entry, 'category', categories),
-        selF('Advancement lock', entry, 'advancement', getAdvancementOptions()),
-        selF('Quest turn-in advancement', entry, 'turnin', getAdvancementOptions()),
-        numF('Sort number', entry, 'sortnum'),
-        colorF('Entry color', entry, 'entryColor'),
-        checkF('Priority (italic, pinned first)', entry, 'priority'),
-        checkF('Secret', entry, 'secret'),
-        checkF('Read by default', entry, 'readByDefault')
+        textF(window.javabridge.t('elementgui.guidebook.common_name'), entry, 'name', { onChange: () => renderAll() }),
+        itemF(window.javabridge.t('elementgui.guidebook.common_icon'), entry, 'icon'),
+        selF(window.javabridge.t('elementgui.guidebook.common_category'), entry, 'category', categories),
+        selF(window.javabridge.t('elementgui.guidebook.common_advancement'), entry, 'advancement', getAdvancementOptions()),
+        selF(window.javabridge.t('elementgui.guidebook.entry_turnin'), entry, 'turnin', getAdvancementOptions()),
+        numF(window.javabridge.t('elementgui.guidebook.common_sortnum'), entry, 'sortnum'),
+        colorF(window.javabridge.t('elementgui.guidebook.entry_color'), entry, 'entryColor'),
+        checkF(window.javabridge.t('elementgui.guidebook.entry_priority'), entry, 'priority'),
+        checkF(window.javabridge.t('elementgui.guidebook.entry_secret'), entry, 'secret'),
+        checkF(window.javabridge.t('elementgui.guidebook.entry_read'), entry, 'readByDefault')
     );
     const row = h('div', 'row');
     row.append(
         h('button', 'btn small', {
-            text: 'Duplicate',
+            text: window.javabridge.t('elementgui.guidebook.common_duplicate'),
             onclick: () => {
                 const c = JSON.parse(JSON.stringify(entry));
                 c.id = uniqueId(entry.id + '_copy', gb.entries);
@@ -741,7 +715,7 @@ function entryInspector(inspector, entry, open) {
                 go('entry', bare(c.category), c.id);
             }
         }),
-        dangerBtn('Delete entry', () => {
+        dangerBtn(window.javabridge.t('elementgui.guidebook.entry_delete'), () => {
             gb.entries = gb.entries.filter(x => x !== entry);
             go('category', bare(entry.category));
         })
@@ -752,16 +726,16 @@ function entryInspector(inspector, entry, open) {
 
 function pageInspector(inspector, entry, pageIndex) {
     const page = entry.pages[pageIndex];
-    inspector.appendChild(h('div', 'ins-title', { text: 'Page ' + (pageIndex + 1) }));
-    const settingsSection = section('Page', true);
+    inspector.appendChild(h('div', 'ins-title', { text: window.javabridge.t('elementgui.guidebook.common_page') + ': ' + (pageIndex + 1) }));
+    const settingsSection = section(window.javabridge.t('elementgui.guidebook.common_page'), true);
     const body = settingsSection._body;
-    body.appendChild(selF('Type', page, 'type', PAGE_TYPES, () => renderAll()));
+    body.appendChild(selF(window.javabridge.t('elementgui.guidebook.page_type'), page, 'type', PAGE_TYPES, () => renderAll()));
     switch (page.type.slice(10)) {
         case 'text':
             if (isEntryTitlePage(entry, page)) {
                 body.appendChild(
                     fld(
-                        'Title',
+                        window.javabridge.t('elementgui.guidebook.page_title'),
                         h('input', null, {
                             type: 'text',
                             value: entry.name || entry.id,
@@ -770,85 +744,85 @@ function pageInspector(inspector, entry, pageIndex) {
                     )
                 );
             } else {
-                body.appendChild(textF('Title', page, 'title'));
+                body.appendChild(textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'));
             }
             break;
         case 'relations':
-            body.appendChild(textF('Title', page, 'title'));
+            body.appendChild(textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'));
             break;
         case 'image':
             body.append(
-                textF('Title', page, 'title'),
+                textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'),
                 imageListF(page),
-                checkF('Draw border', page, 'border')
+                checkF(window.javabridge.t('elementgui.guidebook.image_border'), page, 'border')
             );
             break;
         case 'crafting':
         case 'smelting':
             body.append(
-                textF('Title', page, 'title'),
-                textF('Recipe id', page, 'recipe', { ph: 'modid:recipe' }),
-                textF('Second recipe id', page, 'recipe2')
+                textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'),
+                textF(window.javabridge.t('elementgui.guidebook.recipe_id'), page, 'recipe', { ph: 'modid:recipe' }),
+                textF(window.javabridge.t('elementgui.guidebook.second_recipe_id'), page, 'recipe2')
             );
             break;
         case 'multiblock':
             body.append(
-                textF('Name', page, 'name'),
-                checkF('Allow visualize button', page, 'enableVisualize'),
+                textF(window.javabridge.t('elementgui.guidebook.common_name'), page, 'name'),
+                checkF(window.javabridge.t('elementgui.guidebook.visualize_button'), page, 'enableVisualize'),
                 h('button', 'btn', {
-                    text: 'Design structure...',
+                    text: window.javabridge.t('elementgui.guidebook.design_structure'),
                     onclick: () => openMultiblock(page)
                 })
             );
             break;
         case 'entity':
             body.append(
-                textF('Entity id', page, 'entity', { ph: 'minecraft:pig' }),
-                textF('Name', page, 'name'),
-                numF('Scale', page, 'scale', 0.1),
-                numF('Offset', page, 'offset', 0.1),
-                checkF('Rotate', page, 'rotate'),
-                numF('Default rotation', page, 'defaultRotation', 1)
+                textF(window.javabridge.t('elementgui.guidebook.entity_id'), page, 'entity', { ph: 'minecraft:pig' }),
+                textF(window.javabridge.t('elementgui.guidebook.common_name'), page, 'name'),
+                numF(window.javabridge.t('elementgui.guidebook.entity_scale'), page, 'scale', 0.1),
+                numF(window.javabridge.t('elementgui.guidebook.entity_offset'), page, 'offset', 0.1),
+                checkF(window.javabridge.t('elementgui.guidebook.entity_rotate'), page, 'rotate'),
+                numF(window.javabridge.t('elementgui.guidebook.entity_default_rot'), page, 'defaultRotation', 1)
             );
             break;
         case 'spotlight':
             body.append(
-                itemF('Item', page, 'item'),
-                textF('Title', page, 'title'),
-                checkF('Link recipe', page, 'linkRecipe')
+                itemF(window.javabridge.t('elementgui.guidebook.item_spotlight'), page, 'item'),
+                textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'),
+                checkF(window.javabridge.t('elementgui.guidebook.link_recipe'), page, 'linkRecipe')
             );
             break;
         case 'link':
             body.append(
-                textF('Title', page, 'title'),
-                textF('URL', page, 'url'),
-                textF('Button text', page, 'linkText')
+                textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'),
+                textF(window.javabridge.t('elementgui.guidebook.link_url'), page, 'url'),
+                textF(window.javabridge.t('elementgui.guidebook.link_button_text'), page, 'linkText')
             );
             break;
         case 'quest':
             body.append(
-                textF('Title', page, 'title'),
-                selF('Trigger advancement', page, 'trigger', getAdvancementOptions())
+                textF(window.javabridge.t('elementgui.guidebook.page_title'), page, 'title'),
+                selF(window.javabridge.t('elementgui.guidebook.quest_advancement'), page, 'trigger', getAdvancementOptions())
             );
             break;
         case 'empty':
-            body.appendChild(checkF('Draw filler', page, 'drawFiller'));
+            body.appendChild(checkF(window.javabridge.t('elementgui.guidebook.draw_filler'), page, 'drawFiller'));
             break;
     }
-    body.appendChild(selF('Advancement lock', page, 'advancement', getAdvancementOptions()));
+    body.appendChild(selF(window.javabridge.t('elementgui.guidebook.common_advancement'), page, 'advancement', getAdvancementOptions()));
     inspector.appendChild(settingsSection);
     const row = h('div', 'row', { style: 'margin-bottom:8px' });
     row.append(
         h('button', 'btn small', {
-            text: '\u2039 Move',
+            text: '\u2039 ' + window.javabridge.t('elementgui.guidebook.common_move'),
             onclick: () => movePage(entry, pageIndex, -1)
         }),
         h('button', 'btn small', {
-            text: 'Move \u203A',
+            text: window.javabridge.t('elementgui.guidebook.common_move') + ' \u203A',
             onclick: () => movePage(entry, pageIndex, 1)
         }),
         h('button', 'btn small', {
-            text: 'Duplicate',
+            text: window.javabridge.t('elementgui.guidebook.common_duplicate'),
             onclick: () => {
                 entry.pages.splice(pageIndex + 1, 0, JSON.parse(JSON.stringify(page)));
                 sel.page = pageIndex + 1;
@@ -856,7 +830,7 @@ function pageInspector(inspector, entry, pageIndex) {
                 renderAll();
             }
         }),
-        dangerBtn('Delete', () => {
+        dangerBtn(window.javabridge.t('elementgui.guidebook.page_delete'), () => {
             entry.pages.splice(pageIndex, 1);
             sel = { kind: 'entry', page: -1 };
             view.spread = Math.min(view.spread, Math.floor(entry.pages.length / 2));

@@ -76,10 +76,10 @@
     "text": "${page.text?json_string}"</#if>
     <#break>
   <#case "multiblock">,
-    "name": "${page.name?has_content?then(page.name, "Multiblock")?json_string}"<#if page.multiblock??>,
-    "multiblock": <@renderMultiblock page.multiblock /></#if><#if !page.enableVisualize>,
+    "multiblock": <@renderMultiblock page.multiblock /><#if !page.enableVisualize>,
     "enable_visualize": false</#if><#if page.text?has_content>,
-    "text": "${page.text?json_string}"</#if>
+    "text": "${page.text?json_string}"</#if><#if page.name?has_content>,
+    "name": "${page.name?json_string}"</#if>
     <#break>
   <#case "entity">,
     "entity": "${page.entity?has_content?then(page.entity, "minecraft:pig")?json_string}"<#if page.scale != 1.0>,

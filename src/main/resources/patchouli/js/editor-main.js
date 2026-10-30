@@ -63,7 +63,7 @@ function mbIsometric(multiblock, selectedLayer = -1, layerOnly = false, onSelect
     const height = Math.max(1, (rows + cols) * unit / 2 + layers * unit + padding * 2);
     const scene = svg('svg', {
         class: 'mb-isometric', viewBox: '0 0 ' + width + ' ' + height,
-        role: 'img', 'aria-label': layerOnly ? 'Isometric preview of the selected layer' : 'Isometric preview of the multiblock'
+        role: 'img'
     });
     scene.appendChild(svg('title', {}, 'Multiblock preview'));
 
@@ -118,8 +118,7 @@ function mbIsometric(multiblock, selectedLayer = -1, layerOnly = false, onSelect
             'data-layer': l, 'data-row': r, 'data-column': c,
             style: '--block-hue:' + hue(bare(value))
         });
-        const name = ch === '_' ? 'Any block' : ch === '0' ? 'Center: ' + (mapping['0'] || 'Air') : value;
-        group.appendChild(svg('title', {}, name + ' (' + (l === 0 ? 'Top' : 'L' + (l + 1)) + ', row ' + (r + 1) + ', column ' + (c + 1) + ')'));
+        group.appendChild(svg('title', {}, value + ' (' + (l === 0 ? 'Top' : 'L' + (l + 1)) + ', row ' + (r + 1) + ', column ' + (c + 1) + ')'));
         const face = (className, vertices) => group.appendChild(svg('polygon', { class: className, points: points(vertices) }));
         const back = project(r, c, y + 1);
         const right = project(r, c + 1, y + 1);
@@ -184,7 +183,7 @@ function renderMb() {
     };
     palettePanel.appendChild(
         fld(
-            'Layers (top \u2192 bottom) \u00D7 rows \u00D7 columns',
+            window.javabridge.t('elementgui.guidebook.mb_dimensions'),
             h(
                 'div',
                 'row',
@@ -192,21 +191,21 @@ function renderMb() {
                 layerInput,
                 rowInput,
                 columnInput,
-                h('button', 'btn small', { text: 'Apply', onclick: apply })
+                h('button', 'btn small', { text: window.javabridge.t('elementgui.guidebook.mb_apply'), onclick: apply })
             )
         )
     );
-    palettePanel.appendChild(checkF('Symmetrical', multiblock, 'symmetrical'));
+    palettePanel.appendChild(checkF(window.javabridge.t('elementgui.guidebook.symmetrical'), multiblock, 'symmetrical'));
     if (!hasCenter) {
         palettePanel.appendChild(h('div', 'ins-hint mb-center-warning', {
             role: 'alert',
-            text: 'Set one center before saving: choose Center (0) in the palette and click a grid cell.'
+            text: window.javabridge.t('elementgui.guidebook.mb_center_alert')
         }));
     }
 
     // palette
     palettePanel.appendChild(
-        h('div', 'ins-title', { text: 'Palette (click to paint, right-click a cell to erase)' })
+        h('div', 'ins-title', { text: window.javabridge.t('elementgui.guidebook.mb_palette') })
     );
     const addPaletteEntry = (ch, label, custom) => {
         const isCenter = ch === '0';
@@ -220,7 +219,7 @@ function renderMb() {
             const inp = h('input', null, {
                 type: 'text',
                 value: multiblock.mapping[ch] || '',
-                placeholder: isCenter ? 'Center block (air)' : 'minecraft:stone[state=value]'
+                placeholder: isCenter ? window.javabridge.t('elementgui.guidebook.mb_center') : 'minecraft:stone[state=value]'
             });
             inp.addEventListener('input', () => {
                 if (isCenter && !inp.value.trim()) {
@@ -235,7 +234,7 @@ function renderMb() {
             r.appendChild(inp);
             r.appendChild(
                 h('button', 'btn small', {
-                    text: 'Pick',
+                    text: window.javabridge.t('elementgui.guidebook.pick_block'),
                     onclick: ev => {
                         ev.stopPropagation();
                         pickItem(v => {
@@ -268,15 +267,15 @@ function renderMb() {
         });
         palettePanel.appendChild(r);
     };
-    addPaletteEntry(' ', 'Air');
-    addPaletteEntry('_', 'Any block');
+    addPaletteEntry(' ', window.javabridge.t('elementgui.guidebook.air'));
+    addPaletteEntry('_', window.javabridge.t('elementgui.guidebook.any_block'));
     addPaletteEntry('0', 'Center (player cursor)', true);
     Object.keys(multiblock.mapping)
         .filter(k => k !== '0')
         .forEach(k => addPaletteEntry(k, '', true));
     palettePanel.appendChild(
         h('button', 'btn small', {
-            text: '+ Block type',
+            text: window.javabridge.t('elementgui.guidebook.new_block'),
             onclick: () => {
                 const ch = [
                     ...'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789'
@@ -298,11 +297,11 @@ function renderMb() {
         renderMbPreview();
     });
     gridPanel.appendChild(h('div', 'mb-preview-head', null,
-        h('span', 'ins-title', { text: 'Structure preview' }),
-        h('label', 'mb-layer-toggle', null, layerOnly, 'Current layer only')
+        h('span', 'ins-title', { text: window.javabridge.t('elementgui.guidebook.structure') }),
+        h('label', 'mb-layer-toggle', null, layerOnly, window.javabridge.t('elementgui.guidebook.current_layer'))
     ));
     gridPanel.appendChild(h('div', 'mb-preview', { id: 'mbPreview' }));
-    gridPanel.appendChild(h('div', 'ins-hint', { text: 'Click a block to edit its layer. Paint in the grid below.' }));
+    gridPanel.appendChild(h('div', 'ins-hint', { text: window.javabridge.t('elementgui.guidebook.mb_help_tip') }));
     renderMbPreview();
 
     // layers + grid
@@ -373,7 +372,6 @@ function strToB64(text) {
     return btoa(binary);
 }
 async function preloadImages(book) {
-    if (!window.javabridge) return;
     const locations = new Set(book.entries.flatMap(entry => entry.pages
         .filter(page => page.type === 'patchouli:image').flatMap(page => page.images)).filter(Boolean));
     for (const location of locations) {
@@ -420,5 +418,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     window.addEventListener('resize', fit);
     gb = normalize(gb);
-    renderAll();
 });
