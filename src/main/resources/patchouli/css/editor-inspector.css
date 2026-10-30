@@ -153,13 +153,10 @@ details.sec > .sec-body {
 }
 
 /* put checkbox labels beside the box */
-.fld.check {
+.fld.check label {
     display: flex;
     align-items: center;
     gap: 6px;
-}
-
-.fld.check label {
     margin: 0;
     opacity: 1;
     font-size: 12px;

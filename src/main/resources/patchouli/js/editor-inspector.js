@@ -9,7 +9,8 @@ function fld(label, input, className) {
     const field = h('div', 'fld' + (className ? ' ' + className : ''));
     const labelElement = h('label', null, { text: label });
     if (className === 'check') {
-        field.append(input, labelElement);
+        labelElement.prepend(input);
+        field.appendChild(labelElement);
     } else {
         field.append(labelElement, input);
     }
