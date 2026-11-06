@@ -89,10 +89,7 @@ function pageNode(book, side) {
 function bookTextureFor() {
     const match = /book_([a-z]+)\.png/.exec(gb.bookTexture || '');
     const color = match && BOOK_COLORS.includes(match[1]) ? match[1] : 'brown';
-    return new URL(
-        '../themes/default_dark/images/patchouli/book_' + color + '.png',
-        document.baseURI
-    ).href;
+    return 'classloader://themes/default_dark/images/patchouli/book_' + color + '.png';
 }
 
 function renderBook() {

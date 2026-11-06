@@ -2,7 +2,7 @@
   "id": "patchouli_plugin",
   "weight": 20,
   "supportedversions": [
-    2026002
+    2026001
   ],
   "javaplugin": "net.nerdypuzzle.patchouli.Launcher",
   "info": {

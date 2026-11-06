@@ -1,5 +1,7 @@
 package net.nerdypuzzle.patchouli.parts;
 
+import net.mcreator.io.FileIO;
+import net.mcreator.plugin.PluginLoader;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.chromium.WebView;
 import net.mcreator.workspace.elements.ModElement;
@@ -11,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Closeable;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.BlockingQueue;
@@ -35,8 +38,9 @@ public class GuidebookPanel extends JPanel implements Closeable {
 
 		GuidebookJavascriptBridge bridge = new GuidebookJavascriptBridge(mcreator);
 
-		this.webView = new WebView("http://mcreator/patchouli/editor.html", false);
+		this.webView = new WebView("classloader://patchouli/editor.html", false);
 		this.webView.addLoadListener(() -> {
+			loadBookStyles();
 			webView.addJavaScriptBridge("javabridge", bridge);
 			loaded = true;
 			runAfterLoaded.forEach(Runnable::run);
@@ -44,6 +48,22 @@ public class GuidebookPanel extends JPanel implements Closeable {
 		});
 
 		add(webView, BorderLayout.CENTER);
+	}
+
+	private void loadBookStyles() {
+		String css = FileIO.readResourceToString(PluginLoader.INSTANCE, "patchouli/css/editor-book.css");
+		for (String font : new String[]{"guidebook-uniform", "guidebook-uniform-upper", "guidebook-minecraft"}) {
+			String resource = "patchouli/fonts/" + font + ".woff";
+			try (var stream = PluginLoader.INSTANCE.getResourceAsStream(resource)) {
+				if (stream == null)
+					throw new IOException("Missing font resource: " + resource);
+				css = css.replace("classloader://" + resource,
+						"data:font/woff;base64," + Base64.getEncoder().encodeToString(stream.readAllBytes()));
+			} catch (IOException e) {
+				LOG.error("Failed to load guidebook font {}", font, e);
+			}
+		}
+		webView.addCSSToDOM(css);
 	}
 
 	public void openInEditingMode(Guidebook guidebook) {

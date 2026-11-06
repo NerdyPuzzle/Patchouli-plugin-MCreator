@@ -2,27 +2,27 @@
 
 @font-face {
     font-family: "Guidebook Uniform";
-    src: url("../fonts/guidebook-uniform.woff") format("woff");
+    src: url("classloader://patchouli/fonts/guidebook-uniform.woff") format("woff");
     font-display: block;
     unicode-range: U+0-FFFF;
 }
 
 @font-face {
     font-family: "Guidebook Uniform";
-    src: url("../fonts/guidebook-uniform-upper.woff") format("woff");
+    src: url("classloader://patchouli/fonts/guidebook-uniform-upper.woff") format("woff");
     font-display: block;
     unicode-range: U+10000-10FFFF;
 }
 
 @font-face {
     font-family: "Guidebook Minecraft";
-    src: url("../fonts/guidebook-minecraft.woff") format("woff");
+    src: url("classloader://patchouli/fonts/guidebook-minecraft.woff") format("woff");
     font-display: block;
 }
 
 @font-face {
     font-family: "Guidebook Minecraft Controls";
-    src: url("../fonts/guidebook-minecraft.woff") format("woff");
+    src: url("classloader://patchouli/fonts/guidebook-minecraft.woff") format("woff");
     font-display: block;
     ascent-override: 90%;
     descent-override: 0%;
@@ -36,7 +36,7 @@
 }
 
 .book {
-    --book-texture: url("../../themes/default_dark/images/patchouli/book_brown.png");
+    --book-texture: url("classloader://themes/default_dark/images/patchouli/book_brown.png");
     position: relative;
     width: 272px;
     height: 180px;
@@ -318,7 +318,7 @@
 .crafting-recipe,
 .smelting-sprite {
     position: absolute;
-    background: url("../../themes/default_dark/images/patchouli/crafting.png") left top / 128px 256px no-repeat;
+    background: url("classloader://themes/default_dark/images/patchouli/crafting.png") left top / 128px 256px no-repeat;
     image-rendering: pixelated;
 }
 
@@ -570,7 +570,7 @@
     justify-content: center;
     height: 20px;
     border: 3px solid transparent;
-    border-image: url("../images/minecraft_button.png") 3 fill / 3px / 0 repeat;
+    border-image: url("classloader://patchouli/images/minecraft_button.png") 3 fill / 3px / 0 repeat;
     image-rendering: pixelated;
     color: #fff;
     font-family: "Guidebook Minecraft Controls", "Guidebook Uniform", sans-serif;
@@ -597,7 +597,7 @@
 }
 
 .pt-btn:is(:hover, :focus-visible):not([contenteditable]):not(.disabled) {
-    border-image-source: url("../images/minecraft_button_highlighted.png");
+    border-image-source: url("classloader://patchouli/images/minecraft_button_highlighted.png");
 }
 
 .pt-btn.disabled {

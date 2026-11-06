@@ -84,8 +84,13 @@ public final class GuidebookJavascriptBridge {
 		List<String[]> sounds = new ArrayList<>();
 		sounds.add(new String[]{"", "Default sound"});
 		try {
-			for (DataListEntry entry : ElementUtil.loadAllSounds(mcreator.getWorkspace()))
-				sounds.add(new String[]{entry.getName(), entry.getReadableName()});
+			var soundEntries = DataListLoader.loadDataMap("sounds");
+			for (String name : ElementUtil.getAllSounds(mcreator.getWorkspace())) {
+				DataListEntry entry = soundEntries.get(name);
+				String label = entry != null ? entry.getReadableName() : name.startsWith(NameMapper.MCREATOR_PREFIX)
+						? name.substring(NameMapper.MCREATOR_PREFIX.length()) : name;
+				sounds.add(new String[]{name, label});
+			}
 		} catch (Exception e) {
 			LOG.error("Failed to load sounds", e);
 		}
@@ -113,14 +118,14 @@ public final class GuidebookJavascriptBridge {
 			for (var element : workspace.getModElements()) {
 				for (MCItem item : element.getMCItems()) {
 					if (id.equals(itemResourceLocation(item.getName())))
-						return iconURI(item.getIcon());
+						return iconURI(item.icon);
 				}
 			}
 		}
 		for (var entry : DataListLoader.loadDataList("blocksitems")) {
 			if (entry instanceof MCItem item && item.hasNoSubtypes() && item.isSupportedInWorkspace(workspace)
 					&& id.equals(itemResourceLocation(item.getName())))
-				return iconURI(item.getIcon());
+				return iconURI(item.icon);
 		}
 		return "";
 	}
@@ -129,8 +134,10 @@ public final class GuidebookJavascriptBridge {
 		if (name == null || name.isBlank())
 			return "";
 		var workspace = mcreator.getWorkspace();
-		if (name.startsWith("TAG:"))
-			return resourceLocation("#" + new MItemBlock(workspace, name).asTagEntry());
+		if (name.startsWith("TAG:")) {
+			String mapped = new MItemBlock(workspace, name).getMappedValue();
+			return resourceLocation("#" + mapped.substring("TAG:".length()));
+		}
 		if (name.startsWith(NameMapper.EXTERNAL_PREFIX))
 			return resourceLocation(name.substring(NameMapper.EXTERNAL_PREFIX.length()));
 		boolean custom = name.startsWith(NameMapper.MCREATOR_PREFIX);
