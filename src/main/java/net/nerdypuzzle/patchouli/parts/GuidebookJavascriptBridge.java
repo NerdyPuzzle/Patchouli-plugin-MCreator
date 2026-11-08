@@ -136,8 +136,14 @@ public final class GuidebookJavascriptBridge {
 		boolean custom = name.startsWith(NameMapper.MCREATOR_PREFIX);
 		if (!custom && !name.startsWith("Blocks.") && !name.startsWith("Items."))
 			return resourceLocation(name);
-		if (custom && workspace.getModElementByName(GeneratorWrapper.getElementPlainName(name)) == null)
-			return "";
+		if (custom) {
+			var element = workspace.getModElementByName(GeneratorWrapper.getElementPlainName(name));
+			if (element == null)
+				return "";
+			String suffix = name.contains(".") ? "_" + name.substring(name.lastIndexOf('.') + 1) : "";
+			suffix = switch (suffix) { case "_body" -> "_chestplate"; case "_legs" -> "_leggings"; default -> suffix; };
+			return resourceLocation(workspace.getWorkspaceSettings().getModID() + ":" + element.getRegistryName() + suffix);
+		}
 		var mapping = workspace.getGenerator().getMappings().getMapping("blocksitems");
 		if (mapping == null || (!custom && !mapping.containsKey(name)))
 			return "";
