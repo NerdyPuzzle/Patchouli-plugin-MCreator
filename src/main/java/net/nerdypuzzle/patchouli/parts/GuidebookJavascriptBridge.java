@@ -94,7 +94,7 @@ public final class GuidebookJavascriptBridge {
 
 	@SuppressWarnings("unused") public void openMCItemSelector(Consumer<String> callback) {
 		SwingUtilities.invokeLater(() -> {
-			MCItem selected = MCItemSelectorDialog.openSelectorDialog(mcreator, ElementUtil::loadBlocksAndItems);
+			MCItem selected = MCItemSelectorDialog.openSelectorDialog(mcreator, ElementUtil::loadBlocksAndItems, null);
 			callback.accept(selected == null ? null : itemResourceLocation(selected.getName()));
 		});
 	}
